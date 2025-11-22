@@ -21,7 +21,23 @@ async function main() {
         },
     })
 
-    console.log({ user })
+    const patrickPasswordHash = await bcrypt.hash('QuailRun1', 10)
+    const patrick = await prisma.user.upsert({
+        where: { username: 'Patrick' },
+        update: {
+            passwordHash: patrickPasswordHash,
+            role: Role.ADMIN,
+            status: Status.ACTIVE,
+        },
+        create: {
+            username: 'Patrick',
+            passwordHash: patrickPasswordHash,
+            role: Role.ADMIN,
+            status: Status.ACTIVE,
+        },
+    })
+
+    console.log({ user, patrick })
 }
 
 main()
