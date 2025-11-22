@@ -23,14 +23,14 @@ async function main() {
 
     const patrickPasswordHash = await bcrypt.hash('QuailRun1', 10)
     const patrick = await prisma.user.upsert({
-        where: { username: 'Patrick' },
+        where: { username: 'patrick' },
         update: {
             passwordHash: patrickPasswordHash,
             role: Role.ADMIN,
             status: Status.ACTIVE,
         },
         create: {
-            username: 'Patrick',
+            username: 'patrick',
             passwordHash: patrickPasswordHash,
             role: Role.ADMIN,
             status: Status.ACTIVE,

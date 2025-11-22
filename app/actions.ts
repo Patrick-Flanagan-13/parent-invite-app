@@ -64,7 +64,8 @@ export async function signupForSlot(formData: FormData) {
 
 export async function login(prevState: any, formData: FormData) {
     try {
-        const username = formData.get('username') as string
+        const rawUsername = formData.get('username') as string
+        const username = rawUsername.toLowerCase()
         const password = formData.get('password') as string
 
         const user = await prisma.user.findUnique({
