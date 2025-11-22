@@ -20,10 +20,8 @@ export default async function AdminPage() {
     let error = null
 
     try {
-        const where = isAdmin ? {} : { createdById: session.user.id }
-
+        // Temporarily show all slots to everyone until schema is fixed
         slots = await prisma.slot.findMany({
-            where,
             orderBy: { startTime: 'asc' },
             include: {
                 _count: { select: { signups: true } },
