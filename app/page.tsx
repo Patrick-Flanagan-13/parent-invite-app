@@ -9,13 +9,13 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
-      {/* Hero Section with Background Image */}
+      {/* Hero Section with San Ramon Background Image */}
       <div className="relative overflow-hidden">
-        {/* Background Image */}
+        {/* Background Image - Mount Diablo visible from San Ramon */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80"
-            alt="San Ramon California landscape"
+            src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?w=1920&q=80"
+            alt="Mount Diablo and San Ramon California"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-amber-900/80 backdrop-blur-[2px]"></div>
