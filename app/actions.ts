@@ -72,14 +72,14 @@ export async function login(prevState: any, formData: FormData) {
             where: { username },
         })
 
-        if (!user) return 'Invalid username or password'
+        if (!user) return 'Debug: User not found in database'
 
         if (user.status === 'SUSPENDED') {
             return 'Your account has been suspended. Please contact an administrator.'
         }
 
         const isValid = await bcrypt.compare(password, user.passwordHash)
-        if (!isValid) return 'Invalid username or password'
+        if (!isValid) return 'Debug: Invalid password'
 
         // Create the session
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000)
