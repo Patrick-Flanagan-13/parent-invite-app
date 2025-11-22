@@ -13,10 +13,6 @@ export default async function AdminLayout({
         redirect('/login')
     }
 
-    if (session.user.role !== 'ADMIN') {
-        redirect('/')
-    }
-
     return (
         <div>
             <nav className="bg-white shadow-sm">
