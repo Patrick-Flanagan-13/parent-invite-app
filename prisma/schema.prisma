@@ -38,7 +38,7 @@ model User {
   role         Role     @default(REGULAR)
   status       Status   @default(ACTIVE)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime @default(now()) @updatedAt
 }
 
 enum Role {
