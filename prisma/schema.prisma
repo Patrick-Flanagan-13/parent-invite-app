@@ -33,4 +33,19 @@ model User {
   id           String   @id @default(cuid())
   username     String   @unique
   passwordHash String
+  name         String?
+  role         Role     @default(REGULAR)
+  status       Status   @default(ACTIVE)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  REGULAR
+}
+
+enum Status {
+  ACTIVE
+  SUSPENDED
 }

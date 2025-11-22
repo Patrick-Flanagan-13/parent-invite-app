@@ -73,6 +73,10 @@ export async function login(prevState: any, formData: FormData) {
 
         if (!user) return 'Invalid username or password'
 
+        if (user.status === 'SUSPENDED') {
+            return 'Your account has been suspended. Please contact an administrator.'
+        }
+
         const isValid = await bcrypt.compare(password, user.passwordHash)
         if (!isValid) return 'Invalid username or password'
 
