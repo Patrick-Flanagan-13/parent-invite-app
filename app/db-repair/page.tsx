@@ -83,6 +83,23 @@ export default function DbToolsPage() {
                         Normalize Usernames
                     </button>
                 </div>
+
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h2 className="text-xl font-semibold mb-4">4. Inspect Users</h2>
+                    <button
+                        onClick={async () => {
+                            setLoading(true)
+                            const { listUsers } = await import('./actions')
+                            const result = await listUsers()
+                            setStatus(result) // Reuse status display
+                            setLoading(false)
+                        }}
+                        disabled={loading}
+                        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 disabled:opacity-50"
+                    >
+                        List All Users
+                    </button>
+                </div>
             </div>
         </div>
     )
