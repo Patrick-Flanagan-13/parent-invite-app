@@ -11,7 +11,14 @@ import { Role, Status } from '@prisma/client'
 // For now, we'll assume the caller handles auth or we'll add a basic check if we had a session lib.
 // TODO: Integrate with actual auth session.
 
+import { getSession } from '@/lib/auth'
+
 export async function createUser(formData: FormData) {
+    const session = await getSession()
+    if (!session || session.user.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+    }
+
     const rawUsername = formData.get('username') as string
     const username = rawUsername?.toLowerCase()
     const password = formData.get('password') as string
@@ -43,6 +50,11 @@ export async function createUser(formData: FormData) {
 }
 
 export async function updateUser(formData: FormData) {
+    const session = await getSession()
+    if (!session || session.user.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+    }
+
     const id = formData.get('id') as string
     const name = formData.get('name') as string
     const role = formData.get('role') as Role
@@ -61,6 +73,11 @@ export async function updateUser(formData: FormData) {
 }
 
 export async function toggleUserStatus(id: string, currentStatus: Status) {
+    const session = await getSession()
+    if (!session || session.user.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+    }
+
     const newStatus = currentStatus === Status.ACTIVE ? Status.SUSPENDED : Status.ACTIVE
 
     await prisma.user.update({
@@ -72,6 +89,11 @@ export async function toggleUserStatus(id: string, currentStatus: Status) {
 }
 
 export async function resetPassword(formData: FormData) {
+    const session = await getSession()
+    if (!session || session.user.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+    }
+
     const id = formData.get('id') as string
     const newPassword = formData.get('newPassword') as string
 
