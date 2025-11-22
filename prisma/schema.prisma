@@ -18,6 +18,8 @@ model Slot {
   maxCapacity    Int
   currentSignups Int      @default(0)
   signups        Signup[]
+  createdById    String?
+  createdBy      User?    @relation(fields: [createdById], references: [id])
 }
 
 
@@ -39,6 +41,7 @@ model User {
   status       Status   @default(ACTIVE)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
+  slots        Slot[]
 }
 
 enum Role {
