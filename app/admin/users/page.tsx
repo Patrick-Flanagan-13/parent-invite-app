@@ -1,10 +1,41 @@
 import { prisma } from '@/lib/db'
 import { createUser, updateUser, toggleUserStatus, resetPassword } from './actions'
 
+export const dynamic = 'force-dynamic'
+
 export default async function UsersPage() {
-    const users = await prisma.user.findMany({
-        orderBy: { createdAt: 'desc' },
-    })
+    let users = []
+    let error = null
+
+    try {
+        users = await prisma.user.findMany({
+            orderBy: { createdAt: 'desc' },
+        })
+    } catch (e: any) {
+        console.error('Failed to fetch users:', e)
+        error = e.message || 'Failed to load users'
+    }
+
+    if (error) {
+        return (
+            <div className="container mx-auto p-6">
+                <div className="bg-red-50 border-l-4 border-red-400 p-4">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-red-700">
+                                Error loading users: {error}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="container mx-auto p-6">
@@ -91,8 +122,8 @@ export default async function UsersPage() {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span
                                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status === 'ACTIVE'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-red-100 text-red-800'
                                             }`}
                                     >
                                         {user.status}
