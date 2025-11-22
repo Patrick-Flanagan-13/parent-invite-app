@@ -3,12 +3,15 @@
 import { prisma } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import bcrypt from 'bcryptjs'
-import { encrypt } from '@/lib/auth'
+import { encrypt, getSession } from '@/lib/auth'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 
 export async function createSlot(formData: FormData) {
+    const session = await getSession()
+    if (!session) throw new Error('Unauthorized')
+
     const startTime = new Date(formData.get('startTime') as string)
     const endTime = new Date(formData.get('endTime') as string)
     const maxCapacity = parseInt(formData.get('maxCapacity') as string)
@@ -18,6 +21,7 @@ export async function createSlot(formData: FormData) {
             startTime,
             endTime,
             maxCapacity,
+            createdById: session.user.id,
         },
     })
 
