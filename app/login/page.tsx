@@ -60,6 +60,7 @@ export default function LoginPage() {
                                         name="username"
                                         type="text"
                                         required
+                                        autoComplete="username"
                                         className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                                         placeholder="Enter your username"
                                     />
@@ -81,6 +82,7 @@ export default function LoginPage() {
                                         name="password"
                                         type="password"
                                         required
+                                        autoComplete="current-password"
                                         className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                                         placeholder="Enter your password"
                                     />
