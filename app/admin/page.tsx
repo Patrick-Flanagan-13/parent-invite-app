@@ -1,19 +1,36 @@
 import { prisma } from '@/lib/db'
 import { createSlot, deleteSlot } from '../actions'
 import { Slot } from '@prisma/client'
+import { getSession } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
-type SlotWithCount = Slot & { _count: { signups: number } }
+type SlotWithDetails = Slot & {
+    _count: { signups: number },
+    signups: { parentName: string, email: string }[],
+    createdBy?: { username: string, name: string | null } | null
+}
 
 export default async function AdminPage() {
-    let slots: SlotWithCount[] = []
+    const session = await getSession()
+    if (!session) redirect('/login')
+
+    const isAdmin = session.user.role === 'ADMIN'
+    let slots: SlotWithDetails[] = []
     let error = null
 
     try {
+        const where = isAdmin ? {} : { createdById: session.user.id }
+
         slots = await prisma.slot.findMany({
+            where,
             orderBy: { startTime: 'asc' },
-            include: { _count: { select: { signups: true } } },
+            include: {
+                _count: { select: { signups: true } },
+                signups: { select: { parentName: true, email: true } },
+                createdBy: { select: { username: true, name: true } }
+            },
         })
     } catch (e: any) {
         console.error('Failed to fetch slots:', e)
@@ -25,16 +42,7 @@ export default async function AdminPage() {
             <div className="min-h-screen bg-gray-50 p-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="bg-red-50 border-l-4 border-red-400 p-4">
-                        <div className="flex">
-                            <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                            <div className="ml-3">
-                                <p className="text-sm text-red-700">Error loading dashboard: {error}</p>
-                            </div>
-                        </div>
+                        <p className="text-sm text-red-700">Error loading dashboard: {error}</p>
                     </div>
                 </div>
             </div>
@@ -49,7 +57,7 @@ export default async function AdminPage() {
                     <div className="flex items-center justify-between">
                         <h1 className="text-3xl md:text-4xl font-extrabold">
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                                Admin Dashboard
+                                {isAdmin ? 'Admin Dashboard' : 'Teacher Dashboard'}
                             </span>
                         </h1>
                         <div className="flex items-center space-x-2 text-sm text-gray-600">
@@ -134,7 +142,7 @@ export default async function AdminPage() {
                     <div className="divide-y divide-gray-100">
                         {slots.map((slot, index) => (
                             <div key={slot.id} className="p-6 hover:bg-gradient-to-r hover:from-blue-50/50 transition-all duration-200 group">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div className="flex items-center space-x-4 flex-1">
                                         <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                                             {index + 1}
@@ -159,6 +167,14 @@ export default async function AdminPage() {
                                                     minute: '2-digit',
                                                 })}
                                             </p>
+
+                                            {/* Admin Info: Created By */}
+                                            {isAdmin && slot.createdBy && (
+                                                <p className="text-xs text-indigo-600 mt-1 font-medium">
+                                                    Created by: {slot.createdBy.name || slot.createdBy.username}
+                                                </p>
+                                            )}
+
                                             <div className="mt-2 flex items-center space-x-4">
                                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${slot._count.signups >= slot.maxCapacity
                                                     ? 'bg-red-100 text-red-700'
@@ -170,12 +186,27 @@ export default async function AdminPage() {
                                                     <span className="text-xs text-red-600 font-semibold">★ FULL</span>
                                                 )}
                                             </div>
+
+                                            {/* Signups Details */}
+                                            {slot.signups.length > 0 && (
+                                                <div className="mt-3 bg-gray-50 rounded-lg p-3 text-sm">
+                                                    <p className="font-semibold text-gray-700 mb-1">Registered Parents:</p>
+                                                    <ul className="space-y-1">
+                                                        {slot.signups.map((signup, i) => (
+                                                            <li key={i} className="text-gray-600 flex items-center">
+                                                                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
+                                                                {signup.parentName} <span className="text-gray-400 mx-1">•</span> {signup.email}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <form action={deleteSlot.bind(null, slot.id)}>
                                         <button
                                             type="submit"
-                                            className="ml-4 px-6 py-3 rounded-xl text-sm font-bold text-red-600 hover:text-white hover:bg-red-600 border-2 border-red-200 hover:border-red-600 transition-all duration-200 transform group-hover:scale-105"
+                                            className="px-6 py-3 rounded-xl text-sm font-bold text-red-600 hover:text-white hover:bg-red-600 border-2 border-red-200 hover:border-red-600 transition-all duration-200"
                                         >
                                             Delete
                                         </button>
@@ -190,8 +221,12 @@ export default async function AdminPage() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">No Slots Created Yet</h3>
-                                <p className="text-gray-600">Create your first conference time slot using the form above.</p>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">No Slots Found</h3>
+                                <p className="text-gray-600">
+                                    {isAdmin
+                                        ? "No slots have been created yet."
+                                        : "You haven't created any time slots yet."}
+                                </p>
                             </div>
                         )}
                     </div>
