@@ -164,7 +164,7 @@ export default async function Home() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label htmlFor={`name-${slot.id}`} className="block text-sm font-semibold text-gray-700 mb-2">
-                            Your Name
+                            Parent Name
                           </label>
                           <input
                             type="text"
@@ -172,22 +172,35 @@ export default async function Home() {
                             id={`name-${slot.id}`}
                             required
                             className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all"
-                            placeholder="Enter your full name"
+                            placeholder="Enter parent name"
                           />
                         </div>
                         <div>
-                          <label htmlFor={`email-${slot.id}`} className="block text-sm font-semibold text-gray-700 mb-2">
-                            Email Address
+                          <label htmlFor={`child-${slot.id}`} className="block text-sm font-semibold text-gray-700 mb-2">
+                            Child Name
                           </label>
                           <input
-                            type="email"
-                            name="email"
-                            id={`email-${slot.id}`}
+                            type="text"
+                            name="childName"
+                            id={`child-${slot.id}`}
                             required
                             className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all"
-                            placeholder="your.email@example.com"
+                            placeholder="Enter child name"
                           />
                         </div>
+                      </div>
+                      <div>
+                        <label htmlFor={`email-${slot.id}`} className="block text-sm font-semibold text-gray-700 mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          id={`email-${slot.id}`}
+                          required
+                          className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all"
+                          placeholder="your.email@example.com"
+                        />
                       </div>
                       <button
                         type="submit"

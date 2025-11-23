@@ -42,6 +42,7 @@ export async function deleteSlot(id: string) {
 export async function signupForSlot(formData: FormData) {
     const slotId = formData.get('slotId') as string
     const parentName = formData.get('parentName') as string
+    const childName = formData.get('childName') as string
     const email = formData.get('email') as string
 
     // Check capacity and get teacher info
@@ -63,6 +64,7 @@ export async function signupForSlot(formData: FormData) {
         data: {
             slotId,
             parentName,
+            childName,
             email,
         },
     })
@@ -76,6 +78,7 @@ export async function signupForSlot(formData: FormData) {
                 {
                     id: signup.id,
                     parentName: signup.parentName,
+                    childName: signup.childName,
                     email: signup.email,
                     cancellationToken: signup.cancellationToken,
                 },

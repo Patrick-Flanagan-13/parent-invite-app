@@ -28,7 +28,7 @@ export default async function AdminPage() {
             orderBy: { startTime: 'asc' },
             include: {
                 _count: { select: { signups: true } },
-                signups: { select: { parentName: true, email: true } },
+                signups: { select: { parentName: true, childName: true, email: true } },
                 createdBy: { select: { username: true, name: true } }
             },
         })
@@ -195,7 +195,7 @@ export default async function AdminPage() {
                                                         {slot.signups.map((signup, i) => (
                                                             <li key={i} className="text-gray-600 flex items-center">
                                                                 <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
-                                                                {signup.parentName} <span className="text-gray-400 mx-1">•</span> {signup.email}
+                                                                {signup.parentName} - {signup.childName} <span className="text-gray-400 mx-1">•</span> {signup.email}
                                                             </li>
                                                         ))}
                                                     </ul>

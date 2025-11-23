@@ -14,6 +14,7 @@ interface SlotDetails {
 interface SignupDetails {
     id: string
     parentName: string
+    childName: string
     email: string
     cancellationToken: string
 }
@@ -68,7 +69,7 @@ export async function sendConfirmationEmail(
                             </p>
                             
                             <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
-                                Your parent-teacher conference has been confirmed! Here are the details:
+                                Your parent-teacher conference for <strong>${signup.childName}</strong> has been confirmed! Here are the details:
                             </p>
                             
                             <!-- Details Box -->
