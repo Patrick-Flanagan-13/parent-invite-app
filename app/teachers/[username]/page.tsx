@@ -17,8 +17,13 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
     const { username } = await params
 
     // Fetch user first to check existence and status
-    const user = await prisma.user.findUnique({
-        where: { username },
+    const user = await prisma.user.findFirst({
+        where: {
+            username: {
+                equals: decodeURIComponent(username),
+                mode: 'insensitive'
+            }
+        },
         select: { id: true, name: true, username: true, status: true }
     })
 
