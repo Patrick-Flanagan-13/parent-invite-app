@@ -20,8 +20,12 @@ export default function PasskeyLogin() {
             // 1. Get options from server
             const options = await generateAuthenticationOptionsAction(username)
 
+            if ((options as any).error) {
+                throw new Error((options as any).error)
+            }
+
             // 2. Pass options to browser API
-            const asseResp = await startAuthentication({ optionsJSON: options })
+            const asseResp = await startAuthentication({ optionsJSON: options as any })
 
             // 3. Send response to server for verification
             const verification = await verifyAuthenticationAction(asseResp)

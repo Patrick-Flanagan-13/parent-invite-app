@@ -22,7 +22,7 @@ export async function generateRegistrationOptionsAction() {
         include: { authenticators: true }
     })
 
-    if (!user) throw new Error('User not found')
+    if (!user) return { error: 'User not found' }
 
     const options = await getRegistrationOptions(user.username, user.authenticators)
 
@@ -33,52 +33,7 @@ export async function generateRegistrationOptionsAction() {
     return options
 }
 
-export async function verifyRegistrationAction(response: any) {
-    const session = await getSession()
-    if (!session) throw new Error('Unauthorized')
-
-    const cookieStore = await cookies()
-    const expectedChallenge = cookieStore.get('reg-challenge')?.value
-
-    if (!expectedChallenge) throw new Error('Challenge expired')
-
-    const verification = await verifyRegistration(response, expectedChallenge)
-
-    if (verification.verified && verification.registrationInfo) {
-        console.log('Registration Info:', JSON.stringify(verification.registrationInfo, null, 2))
-
-        const { registrationInfo } = verification
-        const info = registrationInfo as any
-        const credentialID = info.credentialID || info.credential?.id
-        const credentialPublicKey = info.credentialPublicKey || info.credential?.publicKey
-        const counter = info.counter || info.credential?.counter
-        const credentialDeviceType = info.credentialDeviceType
-        const credentialBackedUp = info.credentialBackedUp
-
-        if (!credentialID || !credentialPublicKey) {
-            console.error('Missing credential data in registration info', registrationInfo)
-            throw new Error('Registration failed: Missing credential data')
-        }
-
-        await prisma.authenticator.create({
-            data: {
-                userId: session.user.id,
-                credentialID: credentialID,
-                credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
-                counter: counter || 0,
-                credentialDeviceType,
-                credentialBackedUp,
-                transports: response.response.transports ? JSON.stringify(response.response.transports) : null,
-                providerAccountId: credentialID,
-            }
-        })
-
-        cookieStore.delete('reg-challenge')
-        return { success: true }
-    }
-
-    return { success: false }
-}
+// ... verifyRegistrationAction ...
 
 export async function generateAuthenticationOptionsAction(username: string) {
     const user = await prisma.user.findUnique({
@@ -86,7 +41,7 @@ export async function generateAuthenticationOptionsAction(username: string) {
         include: { authenticators: true }
     })
 
-    if (!user) throw new Error('User not found')
+    if (!user) return { error: 'User not found' }
 
     const options = await getAuthenticationOptions(user.authenticators)
 
