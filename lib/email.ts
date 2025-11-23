@@ -158,9 +158,11 @@ export async function sendConfirmationEmail(
             html: emailHtml,
         })
 
+        console.log('✅ Email sent successfully to:', signup.email)
         return { success: true }
     } catch (error) {
-        console.error('Failed to send confirmation email:', error)
+        console.error('❌ Failed to send confirmation email:', error)
+        console.error('Error details:', JSON.stringify(error, null, 2))
         return { success: false, error: 'Failed to send email' }
     }
 }
