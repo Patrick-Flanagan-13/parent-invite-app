@@ -99,6 +99,8 @@ export default async function UsersPage() {
                             type="text"
                             name="username"
                             required
+                            pattern="[a-zA-Z0-9-_]+"
+                            title="Username can only contain letters, numbers, hyphens, and underscores"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
                         />
                     </div>

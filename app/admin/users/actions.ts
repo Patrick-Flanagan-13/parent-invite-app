@@ -29,6 +29,11 @@ export async function createUser(formData: FormData) {
         throw new Error('Username and password are required')
     }
 
+    const usernameRegex = /^[a-z0-9-_]+$/
+    if (!usernameRegex.test(username)) {
+        throw new Error('Username can only contain letters, numbers, hyphens, and underscores')
+    }
+
     const passwordHash = await bcrypt.hash(password, 10)
 
     try {
