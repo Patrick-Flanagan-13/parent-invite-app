@@ -140,6 +140,25 @@ export default function DbToolsPage() {
                         Fix Signup Table Schema
                     </button>
                 </div>
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h2 className="text-xl font-semibold mb-4">7. Fix Child Name Field</h2>
+                    <p className="text-gray-600 mb-4">
+                        Adds the childName column to the Signup table and sets a default value for existing records.
+                    </p>
+                    <button
+                        onClick={async () => {
+                            setLoading(true)
+                            const { addChildNameToSignups } = await import('./child-name-repair')
+                            const result = await addChildNameToSignups()
+                            setFixResult(result)
+                            setLoading(false)
+                        }}
+                        disabled={loading}
+                        className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 disabled:opacity-50"
+                    >
+                        Add Child Name Column
+                    </button>
+                </div>
             </div>
         </div>
     )

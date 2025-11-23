@@ -1,3 +1,7 @@
+'use server'
+
+import { prisma } from '@/lib/db'
+
 export async function addChildNameToSignups() {
     try {
         // Add childName column to Signup table
