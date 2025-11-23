@@ -24,6 +24,8 @@ export default async function CancelPage({ params }: { params: { token: string }
 
         console.log('Signup found:', signup.id)
 
+        const teacherName = signup.slot.createdBy?.name || signup.slot.createdBy?.username || 'Unknown Teacher'
+
         return (
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 py-12 px-4">
                 <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
