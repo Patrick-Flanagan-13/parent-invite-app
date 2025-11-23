@@ -103,12 +103,12 @@ export default async function Home() {
                                             <span className="text-2xl font-bold">{new Date(slot.startTime).getDate()}</span>
                                         </div>
                                         <div>
-                                            <div className="flex items-center gap-3 mb-1">
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
                                                 <h3 className="text-lg font-bold text-slate-900">
                                                     {new Date(slot.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {new Date(slot.endTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
                                                 </h3>
                                                 {slot.name && (
-                                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-sm">
+                                                    <span className="self-start sm:self-auto px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-sm">
                                                         {slot.name}
                                                     </span>
                                                 )}
