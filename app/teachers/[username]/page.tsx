@@ -13,8 +13,8 @@ type SlotWithCount = Slot & {
     collectDonating?: boolean
 }
 
-export default async function TeacherPage({ params }: { params: { username: string } }) {
-    const { username } = params
+export default async function TeacherPage({ params }: { params: Promise<{ username: string }> }) {
+    const { username } = await params
 
     // Fetch user first to check existence and status
     const user = await prisma.user.findUnique({
