@@ -30,7 +30,7 @@ model Signup {
   parentName        String
   email             String
   createdAt         DateTime @default(now())
-  cancellationToken String   @unique @default(cuid())
+  cancellationToken String?  @unique @default(cuid())
 }
 
 model User {
