@@ -69,21 +69,24 @@ export async function signupForSlot(formData: FormData) {
 
     // Send confirmation email (don't fail if email errors)
     try {
-        const teacherName = slot.createdBy?.name || slot.createdBy?.username || 'Unknown Teacher'
-        await sendConfirmationEmail(
-            {
-                id: signup.id,
-                parentName: signup.parentName,
-                email: signup.email,
-                cancellationToken: signup.cancellationToken,
-            },
-            {
-                id: slot.id,
-                startTime: slot.startTime,
-                endTime: slot.endTime,
-                teacherName,
-            }
-        )
+        // Only send email if we have a cancellation token
+        if (signup.cancellationToken) {
+            const teacherName = slot.createdBy?.name || slot.createdBy?.username || 'Unknown Teacher'
+            await sendConfirmationEmail(
+                {
+                    id: signup.id,
+                    parentName: signup.parentName,
+                    email: signup.email,
+                    cancellationToken: signup.cancellationToken,
+                },
+                {
+                    id: slot.id,
+                    startTime: slot.startTime,
+                    endTime: slot.endTime,
+                    teacherName,
+                }
+            )
+        }
     } catch (error) {
         console.error('Failed to send confirmation email:', error)
         // Don't throw - signup is still successful
