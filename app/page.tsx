@@ -1,32 +1,32 @@
 import { prisma } from '@/lib/db'
-import SignupForm from './SignupForm'
-import { Slot } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
-type SlotWithCount = Slot & {
-    _count: { signups: number }
-    name?: string | null
-    description?: string | null
-    collectContributing?: boolean
-    collectDonating?: boolean
-}
-
 export default async function Home() {
-    let slots: SlotWithCount[] = []
+    let teachers = []
     let error = null
 
     try {
-        slots = await prisma.slot.findMany({
-            orderBy: { startTime: 'asc' },
-            include: {
-                _count: { select: { signups: true } },
-                createdBy: { select: { name: true, username: true } }
+        teachers = await prisma.user.findMany({
+            where: {
+                status: 'ACTIVE',
+                // Assuming we want to show all active users as teachers for now
+                // If there's a specific role for teachers, we can add it here:
+                // role: 'USER' 
             },
+            orderBy: { name: 'asc' },
+            select: {
+                id: true,
+                name: true,
+                username: true,
+                _count: {
+                    select: { slots: true }
+                }
+            }
         })
     } catch (e: any) {
-        console.error('Failed to fetch slots:', e)
-        error = e.message || 'Failed to load slots'
+        console.error('Failed to fetch teachers:', e)
+        error = e.message || 'Failed to load teachers'
     }
 
     if (error) {
@@ -74,80 +74,46 @@ export default async function Home() {
                         Class Sign-Ups
                     </h1>
                     <p className="text-xl text-slate-200 max-w-2xl font-light">
-                        We appreciate your support and engagement in your child's education!
+                        We appreciate your support and engagement in your child's education! Select a teacher below to view available conference times.
                     </p>
                 </div>
             </div>
 
-            {/* Content Section */}
+            {/* Teachers Grid */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="flex items-center justify-between mb-10">
-                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Available Sessions</h2>
-                    <div className="text-sm text-slate-500">
-                        {slots.length} slots available
-                    </div>
+                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Our Teachers</h2>
                 </div>
 
-                <div className="grid gap-4">
-                    {slots.map((slot) => {
-                        const isFull = slot._count.signups >= slot.maxCapacity
-                        // @ts-ignore
-                        const teacherName = slot.createdBy?.name || slot.createdBy?.username || 'Unknown Teacher'
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {teachers.map((teacher) => (
+                        <a
+                            key={teacher.id}
+                            href={`/teachers/${teacher.username}`}
+                            className="group bg-white rounded-2xl border border-gray-200 p-6 hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex items-center gap-4"
+                        >
+                            <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full flex items-center justify-center text-blue-600 text-xl font-bold group-hover:scale-110 transition-transform">
+                                {(teacher.name || teacher.username).charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                    {teacher.name || teacher.username}
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                    {teacher._count.slots} {teacher._count.slots === 1 ? 'slot' : 'slots'} available
+                                </p>
+                            </div>
+                            <div className="ml-auto text-gray-300 group-hover:text-blue-600 transition-colors">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </a>
+                    ))}
 
-                        return (
-                            <details key={slot.id} className="group bg-white border border-gray-200 overflow-hidden hover:border-blue-400 transition-colors">
-                                <summary className="list-none cursor-pointer p-6 flex items-center justify-between">
-                                    <div className="flex items-center gap-6">
-                                        <div className="flex flex-col items-center justify-center w-16 h-16 bg-slate-100 text-slate-900">
-                                            <span className="text-xs font-bold uppercase tracking-wider">{new Date(slot.startTime).toLocaleString('en-US', { month: 'short' })}</span>
-                                            <span className="text-2xl font-bold">{new Date(slot.startTime).getDate()}</span>
-                                        </div>
-                                        <div>
-                                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
-                                                <h3 className="text-lg font-bold text-slate-900">
-                                                    {new Date(slot.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {new Date(slot.endTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-                                                </h3>
-                                                {slot.name && (
-                                                    <span className="self-start sm:self-auto px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-sm">
-                                                        {slot.name}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <p className="text-slate-500 text-sm">Teacher: <span className="font-medium text-slate-900">{teacherName}</span></p>
-                                            {slot.description && <p className="text-slate-400 text-sm mt-1">{slot.description}</p>}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-6">
-                                        <div className={`text - sm font - medium ${isFull ? 'text-red-600' : 'text-emerald-600'} `}>
-                                            {isFull ? 'Fully Booked' : `${slot.maxCapacity - slot._count.signups} ${slot.maxCapacity - slot._count.signups === 1 ? 'spot' : 'spots'} open`}
-                                        </div>
-                                        <div className="w-8 h-8 flex items-center justify-center text-slate-400 group-open:rotate-180 transition-transform">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </summary>
-
-                                {!isFull && (
-                                    <div className="p-6 pt-0 border-t border-gray-100 mt-4 bg-slate-50/50">
-                                        <div className="max-w-2xl mx-auto py-8">
-                                            <SignupForm
-                                                slotId={slot.id}
-                                                collectContributing={slot.collectContributing}
-                                                collectDonating={slot.collectDonating}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </details>
-                        )
-                    })}
-
-                    {slots.length === 0 && (
-                        <div className="text-center py-20 bg-white border border-gray-200 border-dashed">
-                            <p className="text-slate-500">No conference slots are currently available.</p>
+                    {teachers.length === 0 && (
+                        <div className="col-span-full text-center py-20 bg-white border border-gray-200 border-dashed rounded-2xl">
+                            <p className="text-slate-500">No active teachers found.</p>
                         </div>
                     )}
                 </div>
