@@ -130,12 +130,8 @@ export default async function HomeDesign3() {
                                             {!isFull && (
                                                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
                                                     <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
-                                                        <div className="absolute top-4 right-4 cursor-pointer" onClick={(e) => {
-                                                            // Close logic would need JS, but for now we rely on details behavior or just clicking summary again
-                                                            // Actually, details/summary modal is tricky without extra JS. 
-                                                            // Let's just render it inline for simplicity in this demo, or use a simpler approach.
-                                                        }}>
-                                                            {/* Close Icon */}
+                                                        <div className="absolute top-4 right-4">
+                                                            {/* Close Icon - clicking summary again closes it */}
                                                         </div>
                                                         <h4 className="text-2xl font-bold mb-6">Complete Registration</h4>
                                                         <SignupForm
