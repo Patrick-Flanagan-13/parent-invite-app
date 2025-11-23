@@ -86,21 +86,28 @@ export async function fixSignupSchema() {
         // Add cancellationToken column to Signup table
         await prisma.$executeRawUnsafe(`ALTER TABLE "Signup" ADD COLUMN IF NOT EXISTS "cancellationToken" TEXT;`)
 
-        // Generate tokens for existing signups
+        // Generate tokens for existing signups that don't have one
         await prisma.$executeRawUnsafe(`
             UPDATE "Signup" 
             SET "cancellationToken" = gen_random_uuid()::text 
             WHERE "cancellationToken" IS NULL;
         `)
 
-        // Add unique constraint
-        await prisma.$executeRawUnsafe(`
-            ALTER TABLE "Signup" 
-            ADD CONSTRAINT IF NOT EXISTS "Signup_cancellationToken_key" 
-            UNIQUE ("cancellationToken");
-        `)
+        // Try to add unique constraint (ignore error if already exists)
+        try {
+            await prisma.$executeRawUnsafe(`
+                ALTER TABLE "Signup" 
+                ADD CONSTRAINT "Signup_cancellationToken_key" 
+                UNIQUE ("cancellationToken");
+            `)
+        } catch (constraintError: any) {
+            // Constraint might already exist, that's okay
+            if (!constraintError.message.includes('already exists')) {
+                throw constraintError
+            }
+        }
 
-        return { success: true, message: 'Signup table updated successfully' }
+        return { success: true, message: 'Signup table updated successfully. All signups now have cancellation tokens.' }
     } catch (e: any) {
         console.error('Signup schema fix failed:', e)
         return { success: false, error: e.message }
