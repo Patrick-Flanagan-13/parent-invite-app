@@ -59,10 +59,11 @@ export default async function HomeDesign1() {
             <div className="relative bg-slate-900 h-[500px] overflow-hidden">
                 <div className="absolute inset-0">
                     <img
-                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
-                        alt="Modern Architecture"
-                        className="w-full h-full object-cover opacity-60"
+                        src="/san-ramon-hills.jpg"
+                        alt="San Ramon Hills"
+                        className="w-full h-full object-cover opacity-70"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
                 </div>
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
                     <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 max-w-3xl">
