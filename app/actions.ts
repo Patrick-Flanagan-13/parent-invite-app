@@ -97,6 +97,7 @@ export async function signupForSlot(formData: FormData) {
 
     revalidatePath('/')
     revalidatePath('/admin')
+    return { success: true }
 }
 
 export async function login(prevState: any, formData: FormData) {
