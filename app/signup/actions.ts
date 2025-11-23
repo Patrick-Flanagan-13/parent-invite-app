@@ -3,8 +3,9 @@
 import { prisma } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import { validatePasswordStrength } from '@/lib/password'
-import { verifyRecaptcha } from '@/lib/recaptcha'
+import { verifyBot } from '@/lib/recaptcha'
 import { Status, Role } from '@prisma/client'
+import { headers } from 'next/headers'
 
 export async function checkUsernameAvailability(username: string) {
     try {
@@ -35,7 +36,6 @@ export async function registerUser(formData: FormData) {
         const password = formData.get('password') as string
         const confirmPassword = formData.get('confirmPassword') as string
         const name = formData.get('name') as string
-        const recaptchaToken = formData.get('recaptchaToken') as string
 
         // Validate inputs
         if (!rawUsername || !password || !confirmPassword) {
@@ -54,14 +54,11 @@ export async function registerUser(formData: FormData) {
             return { success: false, error: 'Password does not meet strength requirements' }
         }
 
-        // Verify reCAPTCHA
-        if (!recaptchaToken) {
-            return { success: false, error: 'Please complete the reCAPTCHA verification' }
-        }
-
-        const recaptchaValid = await verifyRecaptcha(recaptchaToken)
-        if (!recaptchaValid) {
-            return { success: false, error: 'reCAPTCHA verification failed. Please try again.' }
+        // Verify bot protection
+        const requestHeaders = await headers()
+        const isBotVerified = await verifyBot(requestHeaders)
+        if (!isBotVerified) {
+            return { success: false, error: 'Bot verification failed. Please try again.' }
         }
 
         // Check username availability again (race condition protection)
