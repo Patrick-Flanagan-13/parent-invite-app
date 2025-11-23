@@ -79,7 +79,7 @@ export async function registerUser(formData: FormData) {
                 username,
                 passwordHash,
                 name: name || null,
-                role: Role.REGULAR,
+                role: Role.USER,
                 status: Status.SUSPENDED,
             },
         })

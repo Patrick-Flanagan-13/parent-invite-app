@@ -12,6 +12,8 @@ type SlotWithDetails = Slot & {
     createdBy?: { username: string, name: string | null } | null
 }
 
+import RegisterPasskey from './RegisterPasskey'
+
 export default async function AdminPage() {
     const session = await getSession()
     if (!session) redirect('/login')
@@ -53,16 +55,25 @@ export default async function AdminPage() {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
             {/* Header */}
             <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-3xl md:text-4xl font-extrabold">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900">
                                 {isAdmin ? 'Admin Dashboard' : 'Teacher Dashboard'}
-                            </span>
-                        </h1>
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="font-medium">Live</span>
+                            </h1>
+                            <p className="text-sm text-gray-500">
+                                Manage your conference slots and view signups
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
+                                <RegisterPasskey />
+                            </div>
+                            <form action={async () => {
+                                'use server'
+                                // ... logout logic ... 
+                            }}>
+                            </form>
                         </div>
                     </div>
                 </div>

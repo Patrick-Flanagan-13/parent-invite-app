@@ -21,7 +21,7 @@ export async function fixDatabaseSchema() {
     try {
         // 1. Create Enums if they don't exist
         try {
-            await prisma.$executeRawUnsafe(`CREATE TYPE "Role" AS ENUM ('ADMIN', 'REGULAR');`)
+            await prisma.$executeRawUnsafe(`CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');`)
         } catch (e) {
             console.log('Role enum might already exist')
         }
@@ -34,7 +34,7 @@ export async function fixDatabaseSchema() {
 
         // 2. Add columns safely
         await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "name" TEXT;`)
-        await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "role" "Role" DEFAULT 'REGULAR';`)
+        await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "role" "Role" DEFAULT 'USER';`)
         await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "status" "Status" DEFAULT 'ACTIVE';`)
 
         // Handle timestamps

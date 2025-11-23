@@ -3,6 +3,7 @@
 import { login } from '@/app/actions'
 import { useActionState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import PasskeyLogin from './PasskeyLogin'
 
 export default function LoginPage() {
     const [state, action, isPending] = useActionState(login, null)
@@ -124,6 +125,8 @@ export default function LoginPage() {
                             )}
                         </button>
                     </form>
+
+                    <PasskeyLogin />
 
                     <div className="mt-6 text-center">
                         <p className="text-sm text-gray-600">

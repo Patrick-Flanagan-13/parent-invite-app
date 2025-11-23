@@ -35,20 +35,36 @@ model Signup {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  username     String   @unique
-  passwordHash String
-  name         String?
-  role         Role     @default(REGULAR)
-  status       Status   @default(ACTIVE)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now()) @updatedAt
-  slots        Slot[]
+  id            String          @id @default(cuid())
+  username      String          @unique
+  passwordHash  String
+  name          String?
+  role          Role            @default(USER)
+  status        Status          @default(SUSPENDED)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+  slots         Slot[]
+  authenticators Authenticator[]
+}
+
+model Authenticator {
+  id                   String   @id @default(cuid())
+  credentialID         String   @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 enum Role {
   ADMIN
-  REGULAR
+  USER
 }
 
 enum Status {

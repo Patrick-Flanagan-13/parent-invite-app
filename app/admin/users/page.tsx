@@ -125,7 +125,7 @@ export default async function UsersPage() {
                             name="role"
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
                         >
-                            <option value="REGULAR">Regular</option>
+                            <option value="USER">Regular</option>
                             <option value="ADMIN">Admin</option>
                         </select>
                     </div>

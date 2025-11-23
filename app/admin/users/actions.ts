@@ -23,7 +23,7 @@ export async function createUser(formData: FormData) {
     const username = rawUsername?.toLowerCase()
     const password = formData.get('password') as string
     const name = formData.get('name') as string
-    const role = (formData.get('role') as Role) || Role.REGULAR
+    const role = (formData.get('role') as Role) || Role.USER
 
     if (!username || !password) {
         throw new Error('Username and password are required')
