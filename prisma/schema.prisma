@@ -28,7 +28,7 @@ model Signup {
   slotId            String
   slot              Slot     @relation(fields: [slotId], references: [id], onDelete: Cascade)
   parentName        String
-  childName         String
+  childName         String?
   email             String
   createdAt         DateTime @default(now())
   cancellationToken String?  @unique @default(cuid())
