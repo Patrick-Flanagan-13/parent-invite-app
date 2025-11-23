@@ -50,6 +50,11 @@ export default async function CancelPage({ params }: { params: Promise<{ token: 
                             </div>
 
                             <div>
+                                <p className="text-sm font-medium text-gray-500">Child Name</p>
+                                <p className="text-base text-gray-900">{signup.childName}</p>
+                            </div>
+
+                            <div>
                                 <p className="text-sm font-medium text-gray-500">Email</p>
                                 <p className="text-base text-gray-900">{signup.email}</p>
                             </div>
