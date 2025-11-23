@@ -31,7 +31,10 @@ export async function sendConfirmationEmail(
     }
 
     try {
-        const cancellationUrl = `${process.env.NEXT_PUBLIC_URL || 'https://parent-invite-app.vercel.app'}/cancel/${signup.cancellationToken}`
+        // Use Vercel's automatic URL or fallback to production domain
+        const baseUrl = process.env.NEXT_PUBLIC_URL ||
+            (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://parent-invite-app.vercel.app')
+        const cancellationUrl = `${baseUrl}/cancel/${signup.cancellationToken}`
 
         const emailHtml = `
 <!DOCTYPE html>
