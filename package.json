@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate && prisma db push --accept-data-loss && node scripts/backfill-email.js"
+    "postinstall": "prisma generate && prisma db push --accept-data-loss"
   },
   "dependencies": {
     "@simplewebauthn/browser": "^13.2.2",
