@@ -55,16 +55,25 @@ export async function getAuthenticationOptions(userAuthenticators: Authenticator
 }
 
 export async function verifyAuthentication(body: any, expectedChallenge: string, authenticator: Authenticator) {
+    console.log('verifyAuthentication called')
+    if (!authenticator) {
+        console.error('verifyAuthentication: authenticator is undefined')
+        throw new Error('Authenticator is undefined')
+    }
+
+    const authObject = {
+        credentialID: authenticator.credentialID,
+        credentialPublicKey: new Uint8Array(Buffer.from(authenticator.credentialPublicKey, 'base64')),
+        counter: authenticator.counter,
+        transports: authenticator.transports ? JSON.parse(authenticator.transports) : undefined,
+    }
+    console.log('Constructed authenticator object for verification:', JSON.stringify({ ...authObject, credentialPublicKey: '[REDACTED]' }, null, 2))
+
     return await verifyAuthenticationResponse({
         response: body,
         expectedChallenge,
         expectedOrigin: origin,
         expectedRPID: rpID,
-        authenticator: {
-            credentialID: authenticator.credentialID,
-            credentialPublicKey: new Uint8Array(Buffer.from(authenticator.credentialPublicKey, 'base64')),
-            counter: authenticator.counter,
-            transports: authenticator.transports ? JSON.parse(authenticator.transports) : undefined,
-        },
+        authenticator: authObject,
     } as any);
 }

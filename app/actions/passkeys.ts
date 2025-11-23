@@ -98,41 +98,62 @@ export async function generateAuthenticationOptionsAction(username: string) {
 }
 
 export async function verifyAuthenticationAction(response: any) {
+    console.log('verifyAuthenticationAction started', JSON.stringify(response, null, 2))
+    const session = await getSession()
+    // Allow login without session (obviously)
+
     const cookieStore = await cookies()
     const expectedChallenge = cookieStore.get('auth-challenge')?.value
-    const username = cookieStore.get('auth-username')?.value
 
-    if (!expectedChallenge || !username) throw new Error('Challenge expired')
+    if (!expectedChallenge) {
+        console.error('No authentication challenge found in cookies')
+        throw new Error('Challenge expired')
+    }
 
-    const user = await prisma.user.findUnique({
-        where: { username },
-        include: { authenticators: true }
+    if (!response.id) {
+        console.error('Response missing id', response)
+        throw new Error('Invalid response: missing id')
+    }
+
+    const authenticator = await prisma.authenticator.findUnique({
+        where: { credentialID: response.id }
     })
 
-    if (!user) throw new Error('User not found')
+    if (!authenticator) {
+        console.error('Authenticator not found for credentialID:', response.id)
+        throw new Error('Authenticator not found')
+    }
 
-    const authenticator = user.authenticators.find(auth => auth.credentialID === response.id)
+    console.log('Found authenticator:', JSON.stringify(authenticator, null, 2))
 
-    if (!authenticator) throw new Error('Authenticator not found')
+    try {
+        const verification = await verifyAuthentication(response, expectedChallenge, authenticator)
+        console.log('Verification result:', JSON.stringify(verification, null, 2))
 
-    const verification = await verifyAuthentication(response, expectedChallenge, authenticator)
+        if (verification.verified) {
+            const { authenticationInfo } = verification
+            console.log('Authentication info:', JSON.stringify(authenticationInfo, null, 2))
 
-    if (verification.verified && verification.authenticationInfo) {
-        // Update counter
-        await prisma.authenticator.update({
-            where: { credentialID: authenticator.credentialID },
-            data: {
-                counter: verification.authenticationInfo.newCounter
+            await prisma.authenticator.update({
+                where: { credentialID: response.id },
+                data: {
+                    counter: authenticationInfo.newCounter,
+                },
+            })
+
+            const user = await prisma.user.findUnique({
+                where: { id: authenticator.userId },
+            })
+
+            if (user) {
+                await loginUser(user)
+                cookieStore.delete('auth-challenge')
+                return { success: true }
             }
-        })
-
-        // Log the user in
-        await loginUser(user)
-
-        cookieStore.delete('auth-challenge')
-        cookieStore.delete('auth-username')
-
-        return { success: true }
+        }
+    } catch (error) {
+        console.error('Verification failed:', error)
+        throw error
     }
 
     return { success: false }
