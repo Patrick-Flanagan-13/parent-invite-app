@@ -84,7 +84,14 @@ export async function registerUser(formData: FormData) {
         // Hash password
         const passwordHash = await bcrypt.hash(password, 10)
 
-        // Create user in SUSPENDED status
+        // Check if email is whitelisted
+        const whitelisted = await (prisma as any).whitelistedEmail.findUnique({
+            where: { email },
+        })
+
+        const status = whitelisted ? Status.ACTIVE : Status.SUSPENDED
+
+        // Create user
         await prisma.user.create({
             data: {
                 username,
@@ -92,7 +99,7 @@ export async function registerUser(formData: FormData) {
                 passwordHash,
                 name: name || null,
                 role: Role.USER,
-                status: Status.SUSPENDED,
+                status,
             },
         })
 

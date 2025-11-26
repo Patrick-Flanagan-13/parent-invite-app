@@ -135,6 +135,14 @@ export default function LoginPage() {
 
                     <PasskeyLogin />
 
+                    <div className="mt-6 text-center">
+                        <p className="text-sm text-gray-600">
+                            Don't have an account?{' '}
+                            <a href="/signup" className="font-bold text-blue-600 hover:text-blue-700">
+                                Create an account
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
