@@ -335,3 +335,87 @@ export async function sendPasswordResetEmail(
         console.error('Failed to send password reset email:', error)
     }
 }
+export async function sendReminderEmail(
+    email: string,
+    parentName: string,
+    childName: string,
+    slotTime: Date,
+    teacherName: string,
+    cancellationToken: string
+): Promise<void> {
+    const apiKey = process.env.RESEND_API_KEY
+
+    if (!apiKey) {
+        console.log('Email not configured. Would have sent reminder to:', email)
+        return
+    }
+
+    const resend = new Resend(apiKey)
+
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://quailrun.app'
+        const cancellationUrl = `${baseUrl}/cancel/${cancellationToken}`
+
+        const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Conference Reminder</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                    <tr>
+                        <td>
+                            <h1 style="margin: 0 0 20px; color: #1f2937; font-size: 24px;">
+                                Conference Reminder
+                            </h1>
+                            
+                            <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
+                                Hi ${parentName},
+                            </p>
+                            
+                            <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
+                                This is a reminder that you have a parent-teacher conference for <strong>${childName}</strong> with <strong>${teacherName}</strong> coming up tomorrow.
+                            </p>
+
+                            <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
+                                ${new Date(slotTime).toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        })}
+                            </p>
+                            
+                            <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
+                                If you need to cancel, please use the link below.
+                            </p>
+
+                            <p style="margin: 0; font-size: 14px; color: #6b7280;">
+                                <a href="${cancellationUrl}" style="color: #2563eb; word-break: break-all;">Cancel Registration</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+        `
+
+        await resend.emails.send({
+            from: fromEmail,
+            to: email,
+            subject: 'Conference Reminder - Quail Run Elementary',
+            html: emailHtml,
+        })
+    } catch (error) {
+        console.error('Failed to send reminder email:', error)
+    }
+}

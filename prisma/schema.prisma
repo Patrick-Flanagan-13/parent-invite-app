@@ -40,6 +40,7 @@ model Signup {
   cancellationToken String?  @unique @default(cuid())
   contribution      String?
   donation          String?
+  reminderSent      Boolean  @default(false)
 }
 
 model SlotTemplate {
