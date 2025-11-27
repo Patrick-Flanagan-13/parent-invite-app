@@ -36,7 +36,7 @@ export default function LoginPage() {
                         </div>
                         <h2 className="text-3xl font-extrabold">
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                                Admin Login
+                                Quail Run Login
                             </span>
                         </h2>
                         <p className="mt-3 text-gray-600 font-medium">
