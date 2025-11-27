@@ -56,7 +56,7 @@ export async function sendConfirmationEmail(
                     <tr>
                         <td style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">
-                                Conference Confirmed!
+                                Time Confirmed!
                             </h1>
                         </td>
                     </tr>
@@ -173,7 +173,7 @@ export async function sendConfirmationEmail(
         await resend.emails.send({
             from: fromEmail,
             to: signup.email,
-            subject: 'Conference Confirmed - Quail Run Elementary',
+            subject: 'Time Confirmed - Quail Run Elementary',
             html: emailHtml,
         })
 
