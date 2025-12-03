@@ -66,7 +66,7 @@ export default async function AdminPage() {
                                 {isAdmin ? 'Admin Dashboard' : 'Teacher Dashboard'}
                             </h1>
                             <p className="text-sm text-gray-500">
-                                Manage your conference slots and view signups
+                                Manage your slots and view signups
                             </p>
                         </div>
                         <div className="flex items-center gap-4">
@@ -101,7 +101,7 @@ export default async function AdminPage() {
                             </div>
                             <div>
                                 <h2 className="text-2xl font-bold text-white">Create New Time Slot</h2>
-                                <p className="text-blue-100 text-sm mt-1">Add a new conference time for parents to book</p>
+                                <p className="text-blue-100 text-sm mt-1">Add a new time for parents to book</p>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@ export default async function AdminPage() {
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
                     <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-8 py-6 border-b border-gray-200">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-bold text-gray-900">Conference Schedule</h2>
+                            <h2 className="text-2xl font-bold text-gray-900">Schedule</h2>
                             <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-700">
                                 {slots.length} {slots.length === 1 ? 'Slot' : 'Slots'}
                             </span>
