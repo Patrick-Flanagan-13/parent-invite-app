@@ -106,7 +106,7 @@ export default function SignupPage() {
                             </span>
                         </h2>
                         <p className="mt-3 text-gray-600 font-medium">
-                            Request access to the conference system
+                            Request access to the teacher system
                         </p>
                     </div>
 

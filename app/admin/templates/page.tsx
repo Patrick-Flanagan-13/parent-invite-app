@@ -50,6 +50,15 @@ export default async function TemplatesPage() {
                                     className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 px-4 py-3"
                                 />
                             </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Donation Link (Optional)</label>
+                                <input
+                                    type="url"
+                                    name="donationLink"
+                                    placeholder="e.g., https://amazon.com/..."
+                                    className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 px-4 py-3"
+                                />
+                            </div>
                         </div>
 
                         <div className="flex flex-wrap gap-6">

@@ -15,6 +15,7 @@ export async function createTemplate(formData: FormData) {
     await requireAdmin()
     const name = formData.get('name') as string
     const description = formData.get('description') as string
+    const donationLink = formData.get('donationLink') as string
     const collectContributing = formData.get('collectContributing') === 'on'
     const collectDonating = formData.get('collectDonating') === 'on'
     const isDefault = formData.get('isDefault') === 'on'
@@ -33,6 +34,7 @@ export async function createTemplate(formData: FormData) {
         data: {
             name,
             description,
+            donationLink,
             collectContributing,
             collectDonating,
             isDefault
@@ -47,6 +49,7 @@ export async function updateTemplate(formData: FormData) {
     const id = formData.get('id') as string
     const name = formData.get('name') as string
     const description = formData.get('description') as string
+    const donationLink = formData.get('donationLink') as string
     const collectContributing = formData.get('collectContributing') === 'on'
     const collectDonating = formData.get('collectDonating') === 'on'
     const isDefault = formData.get('isDefault') === 'on'
@@ -66,6 +69,7 @@ export async function updateTemplate(formData: FormData) {
         data: {
             name,
             description,
+            donationLink,
             collectContributing,
             collectDonating,
             isDefault

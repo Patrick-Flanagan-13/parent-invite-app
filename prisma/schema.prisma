@@ -24,6 +24,7 @@ model Slot {
   description    String?
   collectContributing Boolean @default(false)
   collectDonating     Boolean @default(false)
+  donationLink   String?
   templateId     String?
   template       SlotTemplate? @relation(fields: [templateId], references: [id])
 }
@@ -50,6 +51,7 @@ model SlotTemplate {
   isDefault           Boolean  @default(false)
   collectContributing Boolean  @default(false)
   collectDonating     Boolean  @default(false)
+  donationLink        String?
   slots               Slot[]
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -95,16 +97,7 @@ model Authenticator {
   @@index([userId])
 }
 
-enum Role {
-  ADMIN
-  USER
-  REGULAR
-}
 
-enum Status {
-  ACTIVE
-  SUSPENDED
-}
 
 
 
@@ -114,4 +107,15 @@ model WhitelistedEmail {
   createdAt DateTime @default(now())
   addedById String
   addedBy   User     @relation(fields: [addedById], references: [id])
+}
+
+enum Role {
+  ADMIN
+  USER
+  REGULAR
+}
+
+enum Status {
+  ACTIVE
+  SUSPENDED
 }

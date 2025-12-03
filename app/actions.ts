@@ -36,6 +36,7 @@ export async function createSlot(formData: FormData) {
                 templateId,
                 name: template.name,
                 description: template.description,
+                donationLink: template.donationLink,
                 collectContributing: template.collectContributing,
                 collectDonating: template.collectDonating,
             }
