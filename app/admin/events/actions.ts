@@ -12,7 +12,7 @@ async function requireUser() {
     return session.user
 }
 
-export async function createEvent(formData: FormData) {
+export async function createEvent(prevState: any, formData: FormData) {
     const user = await requireUser()
     const title = formData.get('title') as string
     const description = formData.get('description') as string
@@ -37,9 +37,10 @@ export async function createEvent(formData: FormData) {
     })
 
     revalidatePath('/admin/events')
+    return { message: 'Event created successfully!' }
 }
 
-export async function updateEvent(formData: FormData) {
+export async function updateEvent(prevState: any, formData: FormData) {
     const user = await requireUser()
     const id = formData.get('id') as string
     const title = formData.get('title') as string
@@ -47,8 +48,8 @@ export async function updateEvent(formData: FormData) {
     const imageUrl = formData.get('imageUrl') as string
 
     const event = await prisma.eventPage.findUnique({ where: { id } })
-    if (!event) throw new Error('Event not found')
-    if (user.role !== 'ADMIN' && event.userId !== user.id) throw new Error('Unauthorized')
+    if (!event) return { error: 'Event not found' }
+    if (user.role !== 'ADMIN' && event.userId !== user.id) return { error: 'Unauthorized' }
 
     await prisma.eventPage.update({
         where: { id },
@@ -60,6 +61,8 @@ export async function updateEvent(formData: FormData) {
     })
 
     revalidatePath('/admin/events')
+    revalidatePath(`/admin/events/${id}`)
+    return { message: 'Changes saved successfully!' }
 }
 
 export async function deleteEvent(id: string) {
