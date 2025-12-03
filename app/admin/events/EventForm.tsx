@@ -5,7 +5,7 @@ import { createEvent, updateEvent } from './actions'
 
 const initialState = {
     message: '',
-    error: ''
+    error: undefined
 }
 
 export default function EventForm({ event }: { event?: any }) {
