@@ -57,6 +57,7 @@ export async function updateTemplate(formData: FormData) {
     const collectContributing = formData.get('collectContributing') === 'on'
     const collectDonating = formData.get('collectDonating') === 'on'
     const displayNameAsTitle = formData.get('displayNameAsTitle') === 'on'
+    const hideEndTime = formData.get('hideEndTime') === 'on'
     const isDefault = formData.get('isDefault') === 'on'
 
     if (isDefault) {
@@ -78,6 +79,7 @@ export async function updateTemplate(formData: FormData) {
             collectContributing,
             collectDonating,
             displayNameAsTitle,
+            hideEndTime,
             isDefault
         }
     })

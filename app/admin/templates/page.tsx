@@ -3,6 +3,7 @@ import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { createTemplate, deleteTemplate, updateTemplate } from './actions'
 import DeleteTemplateButton from './DeleteTemplateButton'
+import TemplateForm from './TemplateForm'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,63 +31,7 @@ export default async function TemplatesPage() {
                 {/* Create Template Form */}
                 <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 border border-gray-100">
                     <h2 className="text-xl font-bold text-gray-900 mb-6">Create New Template</h2>
-                    <form action={createTemplate} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Template Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    required
-                                    placeholder="e.g., Morning Conference"
-                                    className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 px-4 py-3"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Description (Optional)</label>
-                                <input
-                                    type="text"
-                                    name="description"
-                                    placeholder="e.g., 15-minute session"
-                                    className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 px-4 py-3"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-6">
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="collectDonationLink" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
-                                <span className="text-gray-700 font-medium">Allow Donation Link</span>
-                            </label>
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="displayNameAsTitle" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
-                                <span className="text-gray-700 font-medium">Display Name as Title</span>
-                            </label>
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="collectContributing" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
-                                <span className="text-gray-700 font-medium">Collect "Contributing" Info</span>
-                            </label>
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="collectDonating" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
-                                <span className="text-gray-700 font-medium">Collect "Donating" Info</span>
-                            </label>
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="hideEndTime" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
-                                <span className="text-gray-700 font-medium">Hide End Time</span>
-                            </label>
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="isDefault" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
-                                <span className="text-gray-700 font-medium">Set as Default</span>
-                            </label>
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-md"
-                        >
-                            Create Template
-                        </button>
-                    </form>
+                    <TemplateForm />
                 </div>
 
                 {/* Templates List */}
@@ -102,7 +47,18 @@ export default async function TemplatesPage() {
                                         </span>
                                     )}
                                 </div>
-                                <DeleteTemplateButton id={template.id} />
+                                <div className="flex items-center gap-2">
+                                    <a
+                                        href={`/admin/templates/${template.id}`}
+                                        className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
+                                        title="Edit Template"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </a>
+                                    <DeleteTemplateButton id={template.id} />
+                                </div>
                             </div>
 
                             <p className="text-gray-600 text-sm mb-4">{template.description || 'No description'}</p>
