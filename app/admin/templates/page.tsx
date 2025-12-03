@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { createTemplate, deleteTemplate, updateTemplate } from './actions'
+import DeleteTemplateButton from './DeleteTemplateButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,6 +59,10 @@ export default async function TemplatesPage() {
                                 <span className="text-gray-700 font-medium">Allow Donation Link</span>
                             </label>
                             <label className="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" name="displayNameAsTitle" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
+                                <span className="text-gray-700 font-medium">Display Name as Title</span>
+                            </label>
+                            <label className="flex items-center space-x-3 cursor-pointer">
                                 <input type="checkbox" name="collectContributing" className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300" />
                                 <span className="text-gray-700 font-medium">Collect "Contributing" Info</span>
                             </label>
@@ -93,13 +98,7 @@ export default async function TemplatesPage() {
                                         </span>
                                     )}
                                 </div>
-                                <form action={deleteTemplate.bind(null, template.id)}>
-                                    <button className="text-red-400 hover:text-red-600 p-1">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <DeleteTemplateButton id={template.id} />
                             </div>
 
                             <p className="text-gray-600 text-sm mb-4">{template.description || 'No description'}</p>

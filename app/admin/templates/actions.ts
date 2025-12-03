@@ -18,6 +18,7 @@ export async function createTemplate(formData: FormData) {
     const collectDonationLink = formData.get('collectDonationLink') === 'on'
     const collectContributing = formData.get('collectContributing') === 'on'
     const collectDonating = formData.get('collectDonating') === 'on'
+    const displayNameAsTitle = formData.get('displayNameAsTitle') === 'on'
     const isDefault = formData.get('isDefault') === 'on'
 
     if (isDefault) {
@@ -37,6 +38,7 @@ export async function createTemplate(formData: FormData) {
             collectDonationLink,
             collectContributing,
             collectDonating,
+            displayNameAsTitle,
             isDefault
         }
     })
@@ -52,6 +54,7 @@ export async function updateTemplate(formData: FormData) {
     const collectDonationLink = formData.get('collectDonationLink') === 'on'
     const collectContributing = formData.get('collectContributing') === 'on'
     const collectDonating = formData.get('collectDonating') === 'on'
+    const displayNameAsTitle = formData.get('displayNameAsTitle') === 'on'
     const isDefault = formData.get('isDefault') === 'on'
 
     if (isDefault) {
@@ -72,6 +75,7 @@ export async function updateTemplate(formData: FormData) {
             collectDonationLink,
             collectContributing,
             collectDonating,
+            displayNameAsTitle,
             isDefault
         }
     })

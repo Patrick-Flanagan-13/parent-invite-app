@@ -41,6 +41,7 @@ export async function createSlot(formData: FormData) {
                 description: template.description,
                 collectContributing: template.collectContributing,
                 collectDonating: template.collectDonating,
+                displayNameAsTitle: template.displayNameAsTitle,
                 // Only keep donation link if template allows it
                 donationLink: template.collectDonationLink ? donationLink : null,
             }

@@ -24,6 +24,7 @@ model Slot {
   description    String?
   collectContributing Boolean @default(false)
   collectDonating     Boolean @default(false)
+  displayNameAsTitle  Boolean @default(false)
   donationLink   String?
   templateId     String?
   template       SlotTemplate? @relation(fields: [templateId], references: [id])
@@ -52,6 +53,7 @@ model SlotTemplate {
   collectContributing Boolean  @default(false)
   collectDonating     Boolean  @default(false)
   collectDonationLink Boolean  @default(false)
+  displayNameAsTitle  Boolean  @default(false)
   slots               Slot[]
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -119,6 +121,8 @@ enum Status {
   ACTIVE
   SUSPENDED
 }
+
+
 
 
 
