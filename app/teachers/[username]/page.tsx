@@ -185,23 +185,25 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
                                                         <h3 className="text-lg font-bold text-slate-900">{slot.name}</h3>
                                                         {!slot.hideTime && (
                                                             <span className="text-sm text-slate-500 font-medium">
-                                                                {new Date(slot.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {new Date(slot.endTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                                                                {new Date(slot.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                                                                {!slot.hideEndTime && ` - ${new Date(slot.endTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`}
                                                             </span>
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <>
+                                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                                                         {!slot.hideTime && (
                                                             <h3 className="text-lg font-bold text-slate-900">
-                                                                {new Date(slot.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} - {new Date(slot.endTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                                                                {new Date(slot.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                                                                {!slot.hideEndTime && ` - ${new Date(slot.endTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`}
                                                             </h3>
                                                         )}
                                                         {slot.name && (
-                                                            <span className="self-start sm:self-auto px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-sm">
+                                                            <span className="text-lg font-medium text-slate-700">
                                                                 {slot.name}
                                                             </span>
                                                         )}
-                                                    </>
+                                                    </div>
                                                 )}
                                             </div>
                                             {slot.description && <p className="text-slate-500 text-sm mt-1">{slot.description}</p>}
