@@ -11,7 +11,8 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
     const [formData, setFormData] = useState({
         parentName: '',
         childName: '',
-        email: ''
+        email: '',
+        attendeeCount: '1'
     })
 
     // Load saved details from localStorage on mount
@@ -24,7 +25,8 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
             setFormData({
                 parentName: savedParentName || '',
                 childName: savedChildName || '',
-                email: savedEmail || ''
+                email: savedEmail || '',
+                attendeeCount: '1'
             })
         }
     }, [])
@@ -47,6 +49,7 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
             // We need to append the slotId since it's not in the form inputs anymore if we pass it as prop
             // But wait, we can just add a hidden input or append it to formData
             formDataObj.append('slotId', slotId)
+            formDataObj.set('attendeeCount', formData.attendeeCount)
 
             await signupForSlot(formDataObj)
             setStatus('success')
@@ -177,7 +180,8 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
                             required
                             min="1"
                             max={maxAttendees}
-                            defaultValue="1"
+                            value={formData.attendeeCount}
+                            onChange={handleChange}
                             disabled={status === 'submitting'}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         />
