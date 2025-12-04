@@ -20,15 +20,18 @@ type SlotWithCount = Slot & {
 
 export default function SlotCard({
     slot,
+    signupsList,
     adminControls,
     children
 }: {
     slot: SlotWithCount,
+    signupsList?: any[],
     adminControls?: ReactNode,
     children?: ReactNode
 }) {
-    const totalAttendees = Array.isArray(slot.signups)
-        ? slot.signups.reduce((sum, s) => sum + (s.attendeeCount || 1), 0)
+    const effectiveSignups = signupsList || slot.signups
+    const totalAttendees = Array.isArray(effectiveSignups)
+        ? effectiveSignups.reduce((sum, s) => sum + (s.attendeeCount || 1), 0)
         : slot._count.signups
 
     const isFull = totalAttendees >= slot.maxCapacity
@@ -103,11 +106,13 @@ export default function SlotCard({
                         <div className="text-xs text-gray-400 mt-1 hidden group-hover:block">
                             Total: {totalAttendees} (Max: {slot.maxCapacity})
                             <br />
-                            Signups Type: {typeof slot.signups}
+                            Source: {signupsList ? 'Prop' : 'Slot Object'}
                             <br />
-                            Is Array: {Array.isArray(slot.signups) ? 'Yes' : 'No'}
+                            Signups Type: {typeof effectiveSignups}
                             <br />
-                            Raw: {JSON.stringify(slot.signups)}
+                            Is Array: {Array.isArray(effectiveSignups) ? 'Yes' : 'No'}
+                            <br />
+                            Raw: {JSON.stringify(effectiveSignups)}
                         </div>
                     </div>
 

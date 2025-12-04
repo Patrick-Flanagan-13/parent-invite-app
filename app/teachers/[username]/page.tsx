@@ -90,6 +90,8 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
             _count: slot._count || { signups: 0 }
         }))
 
+        console.log('TeacherPage: Prepared slots for render:', JSON.stringify(slots.map(s => ({ id: s.id, signupsCount: s.signups?.length })), null, 2))
+
         events = eventsData
     } catch (e: any) {
         console.error('Failed to fetch slots:', e)
@@ -180,7 +182,7 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="space-y-4">
                     {slots.map((slot) => (
-                        <SlotCard key={slot.id} slot={slot} />
+                        <SlotCard key={slot.id} slot={slot} signupsList={slot.signups} />
                     ))}
 
                     {slots.length === 0 && (
