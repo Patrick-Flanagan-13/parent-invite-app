@@ -80,7 +80,11 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
                 }
             })
         ])
-        slots = slotsData
+        slots = slotsData.map(slot => ({
+            ...slot,
+            signups: slot.signups || [],
+            _count: slot._count
+        }))
 
         events = eventsData
     } catch (e: any) {
