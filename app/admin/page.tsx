@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 type SlotWithDetails = Slot & {
     _count: { signups: number },
-    signups: { parentName: string, childName: string | null, email: string }[],
+    signups: { id: string, parentName: string, childName: string | null, email: string, createdAt: Date }[],
     createdBy?: { username: string, name: string | null } | null
 }
 
@@ -16,6 +16,7 @@ import RegisterPasskey from './RegisterPasskey'
 import CreateSlotForm from './CreateSlotForm'
 import DeleteSlotButton from './DeleteSlotButton'
 import SlotCard from '@/app/components/SlotCard'
+import SignupList from './slots/[id]/SignupList'
 
 export default async function AdminPage() {
     const session = await getSession()
@@ -37,7 +38,7 @@ export default async function AdminPage() {
                 orderBy: { startTime: 'asc' },
                 include: {
                     _count: { select: { signups: true } },
-                    signups: { select: { parentName: true, childName: true, email: true } },
+                    signups: { select: { id: true, parentName: true, childName: true, email: true, createdAt: true } },
                     createdBy: { select: { username: true, name: true } },
                     // @ts-ignore
                     template: { select: { name: true } }
@@ -165,17 +166,7 @@ export default async function AdminPage() {
                                                 <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
                                                     <h4 className="text-sm font-bold text-gray-700">Registered Parents</h4>
                                                 </div>
-                                                <ul className="divide-y divide-gray-100">
-                                                    {slot.signups.map((signup, i) => (
-                                                        <li key={i} className="px-4 py-3 text-sm text-gray-600 flex items-center justify-between">
-                                                            <div>
-                                                                <span className="font-medium text-gray-900">{signup.parentName}</span>
-                                                                {signup.childName && <span className="ml-1 text-gray-500">({signup.childName})</span>}
-                                                            </div>
-                                                            <span className="text-gray-400">{signup.email}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                                <SignupList signups={slot.signups} />
                                             </div>
                                         ) : (
                                             <p className="text-sm text-gray-500 italic">No parents have registered for this slot yet.</p>
