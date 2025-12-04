@@ -84,7 +84,7 @@ export default function SlotCard({
                     </div>
 
                     {adminControls && (
-                        <div onClick={(e) => e.preventDefault()} className="flex items-center gap-2">
+                        <div onClick={(e) => e.stopPropagation()} className="flex items-center gap-2">
                             {adminControls}
                         </div>
                     )}
