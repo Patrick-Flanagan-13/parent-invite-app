@@ -168,7 +168,7 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
                     </div>
                     <div>
                         <label htmlFor="attendeeCount" className="block text-sm font-medium text-gray-700 mb-1">
-                            Number of People <span className="text-red-500">*</span>
+                            Number of Slots <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
