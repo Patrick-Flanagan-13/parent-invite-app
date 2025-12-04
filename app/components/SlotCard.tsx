@@ -1,3 +1,5 @@
+'use client'
+
 import { Slot } from '@prisma/client'
 import SignupForm from '../SignupForm'
 import DonationLink from '../teachers/[username]/DonationLink'
