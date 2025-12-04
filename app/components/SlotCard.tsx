@@ -40,9 +40,16 @@ export default function SlotCard({
     return (
         <details
             className="group bg-white border border-gray-200 overflow-hidden hover:border-blue-400 transition-colors rounded-xl shadow-sm"
+            open={isOpen}
             onToggle={(e) => setIsOpen(e.currentTarget.open)}
         >
-            <summary className="list-none cursor-pointer p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <summary
+                className="list-none cursor-pointer p-6 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                onClick={(e) => {
+                    e.preventDefault()
+                    setIsOpen(!isOpen)
+                }}
+            >
                 <div className="flex items-center gap-6">
                     <div className="flex flex-col items-center justify-center w-16 h-16 bg-slate-100 text-slate-900 rounded-lg shrink-0">
                         <span className="text-xs font-bold uppercase tracking-wider">{new Date(slot.startTime).toLocaleString('en-US', { month: 'short' })}</span>
@@ -110,6 +117,7 @@ export default function SlotCard({
                                 slotId={slot.id}
                                 collectContributing={slot.collectContributing || false}
                                 collectDonating={slot.collectDonating || false}
+                                onClose={() => setIsOpen(false)}
                             />
                         )
                     ))}

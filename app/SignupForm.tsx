@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { signupForSlot } from './actions'
 
-export default function SignupForm({ slotId, collectContributing, collectDonating }: { slotId: string, collectContributing?: boolean, collectDonating?: boolean }) {
+export default function SignupForm({ slotId, collectContributing, collectDonating, onClose }: { slotId: string, collectContributing?: boolean, collectDonating?: boolean, onClose?: () => void }) {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
 
@@ -69,18 +69,32 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
                 <p className="text-green-700 mb-6">
                     You have successfully signed up for this slot. A confirmation email has been sent to you.
                 </p>
-                <button
-                    onClick={() => {
-                        setStatus('idle')
-                        setFormData(prev => ({ ...prev, childName: '' })) // Clear child name for next entry
-                    }}
-                    className="inline-flex items-center px-4 py-2 bg-white border border-green-200 rounded-lg text-green-700 font-medium hover:bg-green-50 hover:border-green-300 transition-colors shadow-sm"
-                >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Register Another Child
-                </button>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button
+                        onClick={onClose}
+                        className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-colors shadow-md"
+                    >
+                        Done
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            setStatus('idle')
+                            setFormData(prev => ({ ...prev, childName: '' })) // Clear child name for next entry
+                        }}
+                        className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-white border border-green-200 rounded-lg text-green-700 font-medium hover:bg-green-50 hover:border-green-300 transition-colors shadow-sm"
+                    >
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Register Sibling
+                    </button>
+                </div>
+
+                <p className="mt-4 text-sm text-green-600/80">
+                    Click <strong>Done</strong> to choose another time slot for the same child.
+                </p>
             </div>
         )
     }
