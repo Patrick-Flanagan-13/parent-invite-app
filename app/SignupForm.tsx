@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signupForSlot } from './actions'
 
-export default function SignupForm({ slotId, collectContributing, collectDonating, onClose, maxAttendees = 1 }: { slotId: string, collectContributing?: boolean, collectDonating?: boolean, onClose?: () => void, maxAttendees?: number }) {
+export default function SignupForm({ slotId, collectContributing, collectDonating, onClose, onSuccess, maxAttendees = 1 }: { slotId: string, collectContributing?: boolean, collectDonating?: boolean, onClose?: () => void, onSuccess?: () => void, maxAttendees?: number }) {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
 
@@ -56,6 +56,7 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
 
             await signupForSlot(formDataObj)
             setStatus('success')
+            if (onSuccess) onSuccess()
             router.refresh() // Refresh server data
         } catch (error: any) {
             console.error(error)
@@ -89,7 +90,7 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
                 </div>
 
                 <p className="mt-4 text-sm text-green-600/80">
-                    Click <strong>Done</strong> to choose another time slot for the same child.
+                    Click <strong>Done</strong> to choose another slot.
                 </p>
             </div>
         )
