@@ -28,10 +28,6 @@ model Slot {
   hideTime            Boolean @default(false)
   hideEndTime         Boolean @default(false)
   donationLink   String?
-  confirmationEmailSubject String?
-  confirmationEmailBody    String?
-  reminderEmailSubject     String?
-  reminderEmailBody        String?
 
   templateId     String?
   template       SlotTemplate? @relation(fields: [templateId], references: [id])
@@ -79,10 +75,6 @@ model SlotTemplate {
   displayNameAsTitle  Boolean  @default(false)
   hideTime            Boolean  @default(false)
   hideEndTime         Boolean  @default(false)
-  confirmationEmailSubject String?
-  confirmationEmailBody    String?
-  reminderEmailSubject     String?
-  reminderEmailBody        String?
 
   slots               Slot[]
   createdAt           DateTime @default(now())

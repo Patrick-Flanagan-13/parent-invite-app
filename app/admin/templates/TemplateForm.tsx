@@ -13,10 +13,6 @@ type Template = {
     displayNameAsTitle: boolean
     hideEndTime: boolean
     isDefault: boolean
-    confirmationEmailSubject?: string | null
-    confirmationEmailBody?: string | null
-    reminderEmailSubject?: string | null
-    reminderEmailBody?: string | null
 }
 
 const initialState = {
@@ -118,64 +114,7 @@ export default function TemplateForm({ template }: { template?: Template }) {
                 </label>
             </div>
 
-            <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Email Settings</h3>
-                <div className="space-y-6">
-                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                        <h4 className="font-semibold text-blue-900 mb-3">Confirmation Email</h4>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-blue-800 mb-1">Subject Line</label>
-                                <input
-                                    type="text"
-                                    name="confirmationEmailSubject"
-                                    defaultValue={template?.confirmationEmailSubject || ''}
-                                    placeholder="Time Confirmed!"
-                                    className="block w-full rounded-lg border-blue-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-blue-800 mb-1">Email Body</label>
-                                <textarea
-                                    name="confirmationEmailBody"
-                                    rows={4}
-                                    defaultValue={template?.confirmationEmailBody || ''}
-                                    placeholder="Your parent-teacher conference for {{childName}} has been confirmed..."
-                                    className="block w-full rounded-lg border-blue-200 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                />
-                                <p className="mt-1 text-xs text-blue-600">Available variables: {'{{parentName}}'}, {'{{childName}}'}, {'{{teacherName}}'}, {'{{startTime}}'}, {'{{endTime}}'}</p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="bg-purple-50 p-4 rounded-xl border border-purple-100">
-                        <h4 className="font-semibold text-purple-900 mb-3">Reminder Email</h4>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-purple-800 mb-1">Subject Line</label>
-                                <input
-                                    type="text"
-                                    name="reminderEmailSubject"
-                                    defaultValue={template?.reminderEmailSubject || ''}
-                                    placeholder="Conference Reminder"
-                                    className="block w-full rounded-lg border-purple-200 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-purple-800 mb-1">Email Body</label>
-                                <textarea
-                                    name="reminderEmailBody"
-                                    rows={4}
-                                    defaultValue={template?.reminderEmailBody || ''}
-                                    placeholder="This is a reminder that you have a conference for {{childName}}..."
-                                    className="block w-full rounded-lg border-purple-200 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                                />
-                                <p className="mt-1 text-xs text-purple-600">Available variables: {'{{parentName}}'}, {'{{childName}}'}, {'{{teacherName}}'}, {'{{startTime}}'}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <button
                 type="submit"

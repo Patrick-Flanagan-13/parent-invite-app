@@ -46,11 +46,7 @@ export async function createTemplate(prevState: any, formData: FormData) {
                 collectDonating,
                 displayNameAsTitle,
                 hideEndTime,
-                isDefault,
-                confirmationEmailSubject,
-                confirmationEmailBody,
-                reminderEmailSubject,
-                reminderEmailBody
+                isDefault
             }
         })
 
@@ -98,11 +94,7 @@ export async function updateTemplate(prevState: any, formData: FormData) {
                 collectDonating,
                 displayNameAsTitle,
                 hideEndTime,
-                isDefault,
-                confirmationEmailSubject,
-                confirmationEmailBody,
-                reminderEmailSubject,
-                reminderEmailBody
+                isDefault
             }
         })
 
@@ -116,11 +108,7 @@ export async function updateTemplate(prevState: any, formData: FormData) {
                 collectContributing,
                 collectDonating,
                 displayNameAsTitle,
-                hideEndTime,
-                confirmationEmailSubject,
-                confirmationEmailBody,
-                reminderEmailSubject,
-                reminderEmailBody
+                hideEndTime
             }
         })
 
