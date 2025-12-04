@@ -35,7 +35,11 @@ export async function createSlot(formData: FormData) {
                 collectDonating: template.collectDonating,
                 displayNameAsTitle: template.displayNameAsTitle,
                 hideTime: template.hideTime,
-                hideEndTime: template.hideEndTime
+                hideEndTime: template.hideEndTime,
+                confirmationEmailSubject: template.confirmationEmailSubject,
+                confirmationEmailBody: template.confirmationEmailBody,
+                reminderEmailSubject: template.reminderEmailSubject,
+                reminderEmailBody: template.reminderEmailBody
             }
         }
     }
@@ -85,6 +89,10 @@ export async function updateSlot(prevState: any, formData: FormData) {
         const maxCapacityStr = formData.get('maxCapacity') as string
         const hideTime = formData.get('hideTime') === 'on'
         const hideEndTime = formData.get('hideEndTime') === 'on'
+        const confirmationEmailSubject = formData.get('confirmationEmailSubject') as string
+        const confirmationEmailBody = formData.get('confirmationEmailBody') as string
+        const reminderEmailSubject = formData.get('reminderEmailSubject') as string
+        const reminderEmailBody = formData.get('reminderEmailBody') as string
         const eventPageId = formData.get('eventPageId') as string
         const donationLink = formData.get('donationLink') as string
 
@@ -108,7 +116,11 @@ export async function updateSlot(prevState: any, formData: FormData) {
                 hideTime,
                 hideEndTime,
                 eventPageId: eventPageId || null,
-                donationLink: donationLink || null
+                donationLink: donationLink || null,
+                confirmationEmailSubject,
+                confirmationEmailBody,
+                reminderEmailSubject,
+                reminderEmailBody
             }
         })
 
@@ -201,6 +213,8 @@ export async function signupForSlot(formData: FormData) {
                     startTime: slot.startTime,
                     endTime: slot.endTime,
                     teacherName,
+                    customSubject: slot.confirmationEmailSubject,
+                    customBody: slot.confirmationEmailBody,
                 }
             )
         }

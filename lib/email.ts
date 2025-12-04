@@ -19,11 +19,18 @@ interface SignupDetails {
     cancellationToken: string
 }
 
+function replaceVariables(
+    template: string,
+    variables: Record<string, string>
+): string {
+    return template.replace(/\{\{(\w+)\}\}/g, (_, key) => variables[key] || `{{${key}}}`)
+}
+
 
 
 export async function sendConfirmationEmail(
     signup: SignupDetails,
-    slot: SlotDetails
+    slot: SlotDetails & { customSubject?: string | null; customBody?: string | null }
 ): Promise<{ success: boolean; error?: string }> {
     // Check for API key at runtime
     const apiKey = process.env.RESEND_API_KEY
@@ -41,7 +48,35 @@ export async function sendConfirmationEmail(
         const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://quailrun.app'
         const cancellationUrl = `${baseUrl}/cancel/${signup.cancellationToken}`
 
-        const subject = 'Time Confirmed - Quail Run Elementary'
+        const variables = {
+            parentName: signup.parentName,
+            childName: signup.childName,
+            teacherName: slot.teacherName,
+            startTime: new Date(slot.startTime).toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' }),
+            endTime: new Date(slot.endTime).toLocaleString('en-US', { timeStyle: 'short' }),
+        }
+
+        const subject = slot.customSubject
+            ? replaceVariables(slot.customSubject, variables)
+            : 'Time Confirmed - Quail Run Elementary'
+
+        let bodyContent = ''
+        if (slot.customBody) {
+            bodyContent = replaceVariables(slot.customBody, variables)
+                .split('\n')
+                .map(line => `<p style="margin: 0 0 20px; font-size: 16px; color: #374151;">${line}</p>`)
+                .join('')
+        } else {
+            bodyContent = `
+                <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
+                    Hi ${signup.parentName},
+                </p>
+                
+                <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
+                    Your parent-teacher conference for <strong>${signup.childName}</strong> has been confirmed! Here are the details:
+                </p>
+            `
+        }
 
         const emailHtml = `
 <!DOCTYPE html>
@@ -68,13 +103,7 @@ export async function sendConfirmationEmail(
                     <!-- Content -->
                     <tr>
                         <td style="padding: 40px;">
-                            <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
-                                Hi ${signup.parentName},
-                            </p>
-                            
-                            <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
-                                Your parent-teacher conference for <strong>${signup.childName}</strong> has been confirmed! Here are the details:
-                            </p>
+                            ${bodyContent}
                             
                             <!-- Details Box -->
                             <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
@@ -345,7 +374,9 @@ export async function sendReminderEmail(
     childName: string,
     slotTime: Date,
     teacherName: string,
-    cancellationToken: string
+    cancellationToken: string,
+    customSubject?: string | null,
+    customBody?: string | null
 ): Promise<void> {
     const apiKey = process.env.RESEND_API_KEY
 
@@ -360,7 +391,44 @@ export async function sendReminderEmail(
         const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://quailrun.app'
         const cancellationUrl = `${baseUrl}/cancel/${cancellationToken}`
 
-        const subject = 'Conference Reminder - Quail Run Elementary'
+        const variables = {
+            parentName,
+            childName,
+            teacherName,
+            startTime: new Date(slotTime).toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' }),
+        }
+
+        const subject = customSubject
+            ? replaceVariables(customSubject, variables)
+            : 'Conference Reminder - Quail Run Elementary'
+
+        let bodyContent = ''
+        if (customBody) {
+            bodyContent = replaceVariables(customBody, variables)
+                .split('\n')
+                .map(line => `<p style="margin: 0 0 20px; font-size: 16px; color: #374151;">${line}</p>`)
+                .join('')
+        } else {
+            bodyContent = `
+                <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
+                    Hi ${parentName},
+                </p>
+                
+                <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
+                    This is a reminder that you have a parent-teacher conference for <strong>${childName}</strong> with <strong>${teacherName}</strong> coming up tomorrow.
+                </p>
+
+                <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
+                    ${new Date(slotTime).toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            })}
+                </p>
+            `
+        }
 
         const emailHtml = `
 <!DOCTYPE html>
@@ -380,23 +448,7 @@ export async function sendReminderEmail(
                                 ${subject}
                             </h1>
                             
-                            <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
-                                Hi ${parentName},
-                            </p>
-                            
-                            <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
-                                This is a reminder that you have a parent-teacher conference for <strong>${childName}</strong> with <strong>${teacherName}</strong> coming up tomorrow.
-                            </p>
-
-                            <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
-                                ${new Date(slotTime).toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        })}
-                            </p>
+                            ${bodyContent}
                             
                             <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
                                 If you need to cancel, please use the link below.
