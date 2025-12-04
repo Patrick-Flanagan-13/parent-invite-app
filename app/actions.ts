@@ -35,7 +35,11 @@ export async function createSlot(formData: FormData) {
                 collectDonating: template.collectDonating,
                 displayNameAsTitle: template.displayNameAsTitle,
                 hideTime: template.hideTime,
-                hideEndTime: template.hideEndTime
+                hideEndTime: template.hideEndTime,
+                confirmationEmailSubject: template.confirmationEmailSubject,
+                confirmationEmailBody: template.confirmationEmailBody,
+                reminderEmailSubject: template.reminderEmailSubject,
+                reminderEmailBody: template.reminderEmailBody
             }
         }
     }
@@ -201,6 +205,8 @@ export async function signupForSlot(formData: FormData) {
                     startTime: slot.startTime,
                     endTime: slot.endTime,
                     teacherName,
+                    customSubject: slot.confirmationEmailSubject,
+                    customBody: slot.confirmationEmailBody
                 }
             )
         }
