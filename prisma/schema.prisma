@@ -60,6 +60,7 @@ model Signup {
   contribution      String?
   donation          String?
   reminderSent      Boolean  @default(false)
+  attendeeCount     Int      @default(1)
 }
 
 model SlotTemplate {
@@ -131,6 +132,20 @@ model WhitelistedEmail {
   addedBy   User     @relation(fields: [addedById], references: [id])
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 enum Role {
   ADMIN
   USER
@@ -141,15 +156,3 @@ enum Status {
   ACTIVE
   SUSPENDED
 }
-
-
-
-
-
-
-
-
-
-
-
-

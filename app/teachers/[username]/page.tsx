@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic'
 
 type SlotWithCount = Slot & {
     _count: { signups: number }
+    signups?: { attendeeCount: number }[]
     name?: string | null
     description?: string | null
     donationLink?: string | null
@@ -67,6 +68,7 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
                 orderBy: { startTime: 'asc' },
                 include: {
                     _count: { select: { signups: true } },
+                    signups: { select: { attendeeCount: true } },
                     createdBy: { select: { name: true, username: true } }
                 },
             }),

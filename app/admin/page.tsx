@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 type SlotWithDetails = Slot & {
     _count: { signups: number },
-    signups: { id: string, parentName: string, childName: string | null, email: string, createdAt: Date }[],
+    signups: { id: string, parentName: string, childName: string | null, email: string, createdAt: Date, attendeeCount: number }[],
     createdBy?: { username: string, name: string | null } | null
 }
 
@@ -38,7 +38,7 @@ export default async function AdminPage() {
                 orderBy: { startTime: 'asc' },
                 include: {
                     _count: { select: { signups: true } },
-                    signups: { select: { id: true, parentName: true, childName: true, email: true, createdAt: true } },
+                    signups: { select: { id: true, parentName: true, childName: true, email: true, createdAt: true, attendeeCount: true } },
                     createdBy: { select: { username: true, name: true } },
                     // @ts-ignore
                     template: { select: { name: true } }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { signupForSlot } from './actions'
 
-export default function SignupForm({ slotId, collectContributing, collectDonating, onClose }: { slotId: string, collectContributing?: boolean, collectDonating?: boolean, onClose?: () => void }) {
+export default function SignupForm({ slotId, collectContributing, collectDonating, onClose, maxAttendees = 1 }: { slotId: string, collectContributing?: boolean, collectDonating?: boolean, onClose?: () => void, maxAttendees?: number }) {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
     const [errorMessage, setErrorMessage] = useState('')
 
@@ -29,7 +29,7 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
         }
     }, [])
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
     }
@@ -115,55 +115,76 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
             )}
 
             <form action={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label htmlFor={`name-${slotId}`} className="block text-sm font-semibold text-gray-700 mb-2">
-                            Parent Name
+                        <label htmlFor="parentName" className="block text-sm font-medium text-gray-700 mb-1">
+                            Parent Name <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
+                            id="parentName"
                             name="parentName"
-                            id={`name-${slotId}`}
                             required
                             value={formData.parentName}
-                            onChange={handleInputChange}
+                            onChange={handleChange}
                             disabled={status === 'submitting'}
-                            className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all disabled:opacity-60 disabled:bg-gray-50"
-                            placeholder="Enter parent name"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            placeholder="John Doe"
                         />
                     </div>
                     <div>
-                        <label htmlFor={`child-${slotId}`} className="block text-sm font-semibold text-gray-700 mb-2">
-                            Child Name
+                        <label htmlFor="childName" className="block text-sm font-medium text-gray-700 mb-1">
+                            Child's Name
                         </label>
                         <input
                             type="text"
+                            id="childName"
                             name="childName"
-                            id={`child-${slotId}`}
-                            required
                             value={formData.childName}
-                            onChange={handleInputChange}
+                            onChange={handleChange}
                             disabled={status === 'submitting'}
-                            className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all disabled:opacity-60 disabled:bg-gray-50"
-                            placeholder="Enter child name"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            placeholder="Jane Doe"
                         />
                     </div>
                 </div>
-                <div>
-                    <label htmlFor={`email-${slotId}`} className="block text-sm font-semibold text-gray-700 mb-2">
-                        Email Address
-                    </label>
-                    <input
-                        type="email"
-                        name="email"
-                        id={`email-${slotId}`}
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        disabled={status === 'submitting'}
-                        className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-3 text-gray-900 placeholder-gray-400 transition-all disabled:opacity-60 disabled:bg-gray-50"
-                        placeholder="your.email@example.com"
-                    />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                            Email Address <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            value={formData.email}
+                            onChange={handleChange}
+                            disabled={status === 'submitting'}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            placeholder="john@example.com"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="attendeeCount" className="block text-sm font-medium text-gray-700 mb-1">
+                            Number of People <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="number"
+                            id="attendeeCount"
+                            name="attendeeCount"
+                            required
+                            min="1"
+                            max={maxAttendees}
+                            defaultValue="1"
+                            disabled={status === 'submitting'}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                            {maxAttendees} {maxAttendees === 1 ? 'spot' : 'spots'} available
+                        </p>
+                    </div>
                 </div>
 
                 {collectContributing && (

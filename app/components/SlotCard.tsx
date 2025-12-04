@@ -7,6 +7,7 @@ import { ReactNode, useState } from 'react'
 
 type SlotWithCount = Slot & {
     _count: { signups: number }
+    signups?: { attendeeCount: number }[]
     name?: string | null
     description?: string | null
     donationLink?: string | null
@@ -26,7 +27,9 @@ export default function SlotCard({
     adminControls?: ReactNode,
     children?: ReactNode
 }) {
-    const isFull = slot._count.signups >= slot.maxCapacity
+    const totalAttendees = slot.signups?.reduce((sum, s) => sum + (s.attendeeCount || 1), 0) || slot._count.signups
+    const isFull = totalAttendees >= slot.maxCapacity
+    const spotsOpen = slot.maxCapacity - totalAttendees
 
     function formatTime(date: Date) {
         return new Intl.DateTimeFormat('en-US', {
@@ -92,7 +95,7 @@ export default function SlotCard({
 
                 <div className="flex items-center gap-6 self-end md:self-auto">
                     <div className={`text-sm font-medium ${isFull ? 'text-red-600' : 'text-emerald-600'}`}>
-                        {isFull ? 'Fully Booked' : `${slot.maxCapacity - slot._count.signups} ${slot.maxCapacity - slot._count.signups === 1 ? 'spot' : 'spots'} open`}
+                        {isFull ? 'Fully Booked' : `${spotsOpen} ${spotsOpen === 1 ? 'spot' : 'spots'} open`}
                     </div>
 
                     {adminControls && (
@@ -115,6 +118,7 @@ export default function SlotCard({
                         !isFull && (
                             <SignupForm
                                 slotId={slot.id}
+                                maxAttendees={spotsOpen}
                                 collectContributing={slot.collectContributing || false}
                                 collectDonating={slot.collectDonating || false}
                                 onClose={() => setIsOpen(false)}

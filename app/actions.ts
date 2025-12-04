@@ -151,6 +151,8 @@ export async function signupForSlot(formData: FormData) {
     const contribution = formData.get('contribution') as string
     const donation = formData.get('donation') as string
 
+    const attendeeCount = parseInt(formData.get('attendeeCount') as string || '1')
+
     // Check capacity and get teacher info
     const slot = await prisma.slot.findUnique({
         where: { id: slotId },
@@ -161,8 +163,10 @@ export async function signupForSlot(formData: FormData) {
     })
 
     if (!slot) throw new Error('Slot not found')
-    if (slot.signups.length >= slot.maxCapacity) {
-        throw new Error('Slot is full')
+
+    const currentAttendees = slot.signups.reduce((sum, s) => sum + (s.attendeeCount || 1), 0)
+    if (currentAttendees + attendeeCount > slot.maxCapacity) {
+        throw new Error('Not enough spots available')
     }
 
     // Create signup
@@ -175,6 +179,7 @@ export async function signupForSlot(formData: FormData) {
             email,
             contribution,
             donation,
+            attendeeCount,
         } as any,
     })
 
