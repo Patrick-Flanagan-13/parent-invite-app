@@ -72,47 +72,52 @@ export async function createSlot(formData: FormData) {
     revalidatePath('/')
 }
 
-export async function updateSlot(formData: FormData) {
-    const session = await getSession()
-    if (!session) throw new Error('Unauthorized')
-    const user = session.user
+export async function updateSlot(prevState: any, formData: FormData) {
+    try {
+        const session = await getSession()
+        if (!session) throw new Error('Unauthorized')
+        const user = session.user
 
-    const id = formData.get('id') as string
-    const name = formData.get('name') as string
-    const startTimeStr = formData.get('startTime') as string
-    const endTimeStr = formData.get('endTime') as string
-    const maxCapacityStr = formData.get('maxCapacity') as string
-    const hideTime = formData.get('hideTime') === 'on'
-    const hideEndTime = formData.get('hideEndTime') === 'on'
-    const eventPageId = formData.get('eventPageId') as string
-    const donationLink = formData.get('donationLink') as string
+        const id = formData.get('id') as string
+        const name = formData.get('name') as string
+        const startTimeStr = formData.get('startTime') as string
+        const endTimeStr = formData.get('endTime') as string
+        const maxCapacityStr = formData.get('maxCapacity') as string
+        const hideTime = formData.get('hideTime') === 'on'
+        const hideEndTime = formData.get('hideEndTime') === 'on'
+        const eventPageId = formData.get('eventPageId') as string
+        const donationLink = formData.get('donationLink') as string
 
-    const slot = await prisma.slot.findUnique({ where: { id } })
-    if (!slot) throw new Error('Slot not found')
-    if (user.role !== 'ADMIN' && slot.createdById !== user.id) throw new Error('Unauthorized')
+        const slot = await prisma.slot.findUnique({ where: { id } })
+        if (!slot) throw new Error('Slot not found')
+        if (user.role !== 'ADMIN' && slot.createdById !== user.id) throw new Error('Unauthorized')
 
-    const startTime = new Date(startTimeStr)
-    let finalEndTime = new Date(endTimeStr)
-    if (hideEndTime && (!endTimeStr || isNaN(finalEndTime.getTime()))) {
-        finalEndTime = new Date(new Date(startTime).getTime() + 60 * 60 * 1000) // +1 hour
-    }
-
-    await prisma.slot.update({
-        where: { id },
-        data: {
-            name: name || null,
-            startTime: startTime,
-            endTime: finalEndTime,
-            maxCapacity: parseInt(maxCapacityStr),
-            hideTime,
-            hideEndTime,
-            eventPageId: eventPageId || null,
-            donationLink: donationLink || null
+        const startTime = new Date(startTimeStr)
+        let finalEndTime = new Date(endTimeStr)
+        if (hideEndTime && (!endTimeStr || isNaN(finalEndTime.getTime()))) {
+            finalEndTime = new Date(new Date(startTime).getTime() + 60 * 60 * 1000) // +1 hour
         }
-    })
 
-    revalidatePath('/admin')
-    revalidatePath('/')
+        await prisma.slot.update({
+            where: { id },
+            data: {
+                name: name || null,
+                startTime: startTime,
+                endTime: finalEndTime,
+                maxCapacity: parseInt(maxCapacityStr),
+                hideTime,
+                hideEndTime,
+                eventPageId: eventPageId || null,
+                donationLink: donationLink || null
+            }
+        })
+
+        revalidatePath('/admin')
+        revalidatePath('/')
+        return { success: true, message: 'Changes saved successfully' }
+    } catch (e) {
+        return { success: false, message: 'Failed to update slot' }
+    }
 }
 
 export async function deleteSlot(id: string) {

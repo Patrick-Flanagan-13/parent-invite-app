@@ -1,5 +1,4 @@
-'use client'
-
+import { useActionState } from 'react'
 import { updateSlot } from '@/app/actions'
 
 type EventPage = {
@@ -7,15 +6,28 @@ type EventPage = {
     title: string
 }
 
+const initialState = {
+    success: false,
+    message: ''
+}
+
 export default function EditSlotForm({ slot, events }: { slot: any, events: EventPage[] }) {
+    const [state, action, isPending] = useActionState(updateSlot, initialState)
+
     // Format dates for datetime-local input (YYYY-MM-DDThh:mm)
     const formatDate = (date: Date) => {
         return new Date(date).toISOString().slice(0, 16)
     }
 
     return (
-        <form action={updateSlot} className="space-y-6">
+        <form action={action} className="space-y-6">
             <input type="hidden" name="id" value={slot.id} />
+
+            {state.message && (
+                <div className={`p-4 rounded-xl ${state.success ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                    {state.message}
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -121,9 +133,10 @@ export default function EditSlotForm({ slot, events }: { slot: any, events: Even
                 </a>
                 <button
                     type="submit"
-                    className="px-8 py-3 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg transition-all"
+                    disabled={isPending}
+                    className="px-8 py-3 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    Save Changes
+                    {isPending ? 'Saving...' : 'Save Changes'}
                 </button>
             </div>
         </form>
