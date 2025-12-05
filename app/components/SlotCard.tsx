@@ -152,16 +152,14 @@ export default function SlotCard({
             <div className="p-6 pt-0 border-t border-gray-100 mt-4 bg-slate-50/50">
                 <div className="max-w-2xl mx-auto py-8">
                     {isOpen && (children ? children : (
-                        !isFull && (
-                            <SignupForm
-                                slotId={slot.id}
-                                maxAttendees={spotsOpen}
-                                collectContributing={slot.collectContributing || false}
-                                collectDonating={slot.collectDonating || false}
-                                onClose={() => setIsOpen(false)}
-                                onSuccess={() => fetchSlotDetails()}
-                            />
-                        )
+                        <SignupForm
+                            slotId={slot.id}
+                            maxAttendees={spotsOpen}
+                            collectContributing={slot.collectContributing || false}
+                            collectDonating={slot.collectDonating || false}
+                            onClose={() => setIsOpen(false)}
+                            onSuccess={() => fetchSlotDetails()}
+                        />
                     ))}
                 </div>
             </div>

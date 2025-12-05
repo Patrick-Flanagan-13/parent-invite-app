@@ -80,7 +80,12 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
-                        onClick={() => window.location.reload()}
+                        onClick={() => {
+                            if (onClose) onClose()
+                            // Optional: reload if we really want to force a full page refresh, 
+                            // but onClose should be enough if the parent updates the UI.
+                            // window.location.reload() 
+                        }}
                         className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-colors shadow-md"
                     >
                         Done
@@ -92,6 +97,14 @@ export default function SignupForm({ slotId, collectContributing, collectDonatin
                 <p className="mt-4 text-sm text-green-600/80">
                     Click <strong>Done</strong> to choose another slot.
                 </p>
+            </div>
+        )
+    }
+
+    if (maxAttendees <= 0) {
+        return (
+            <div className="bg-gray-50 rounded-b-2xl shadow-inner px-6 py-8 text-center border-t border-gray-100">
+                <p className="text-gray-500 font-medium">This slot is fully booked.</p>
             </div>
         )
     }
