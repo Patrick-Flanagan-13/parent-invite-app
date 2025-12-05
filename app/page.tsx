@@ -87,7 +87,7 @@ export default async function Home() {
                         Class Sign-Ups
                     </h1>
                     <p className="text-xl text-slate-200 max-w-2xl font-light">
-                        We appreciate your support and engagement in your child's education! Select a teacher below to view available signup slots.
+                        We appreciate your support and engagement in your child's education! Select a teacher or parent below to view available signup slots.
                     </p>
                 </div>
             </div>
