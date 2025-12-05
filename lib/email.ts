@@ -94,7 +94,7 @@ export async function sendConfirmationEmail(
                                             <tr>
                                                 <td width="33%" valign="top">
                                                     <p style="margin: 0 0 5px; font-size: 12px; color: #6b7280; font-weight: bold; text-transform: uppercase;">
-                                                        👨‍🏫 Teacher
+                                                        👨‍🏫 Teacher/Room Parent
                                                     </p>
                                                     <p style="margin: 0; font-size: 14px; color: #1f2937; font-weight: 600;">
                                                         ${slot.teacherName}
@@ -149,7 +149,7 @@ export async function sendConfirmationEmail(
                         <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e5e7eb;">
                             <p style="margin: 0; font-size: 14px; color: #6b7280;">
                                 Quail Run Elementary School<br>
-                                Parent-Teacher Conference System
+                                Parent-Teacher System
                             </p>
                         </td>
                     </tr>
