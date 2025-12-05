@@ -36,17 +36,20 @@ export function getAppTimezone(): string {
 }
 
 // Format date and time for conference slots
-export function formatSlotDateTime(startTime: Date, endTime: Date, hideEndTime: boolean = false, hideTime: boolean = false): {
+export function formatSlotDateTime(startTime: Date | string, endTime: Date | string, hideEndTime: boolean = false, hideTime: boolean = false): {
     dateStr: string
     timeStr: string
 } {
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+
     // Check if same day using the target timezone
-    const startStr = startTime.toLocaleDateString('en-US', { timeZone: TIMEZONE });
-    const endStr = endTime.toLocaleDateString('en-US', { timeZone: TIMEZONE });
+    const startStr = start.toLocaleDateString('en-US', { timeZone: TIMEZONE });
+    const endStr = end.toLocaleDateString('en-US', { timeZone: TIMEZONE });
     const sameDay = startStr === endStr;
 
     // Format date
-    const dateStr = startTime.toLocaleDateString('en-US', {
+    const dateStr = start.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -55,13 +58,13 @@ export function formatSlotDateTime(startTime: Date, endTime: Date, hideEndTime: 
     })
 
     // Format time
-    const startTimeStr = startTime.toLocaleTimeString('en-US', {
+    const startTimeStr = start.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZone: TIMEZONE
     })
 
-    const endTimeStr = endTime.toLocaleTimeString('en-US', {
+    const endTimeStr = end.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZone: TIMEZONE
@@ -76,7 +79,7 @@ export function formatSlotDateTime(startTime: Date, endTime: Date, hideEndTime: 
 }
 
 // Format for email (returns full formatted string)
-export function formatSlotDateTimeForEmail(startTime: Date, endTime: Date, hideEndTime: boolean = false, hideTime: boolean = false): string {
+export function formatSlotDateTimeForEmail(startTime: Date | string, endTime: Date | string, hideEndTime: boolean = false, hideTime: boolean = false): string {
     const { dateStr, timeStr } = formatSlotDateTime(startTime, endTime, hideEndTime, hideTime)
     if (hideTime) {
         return dateStr;

@@ -62,9 +62,10 @@ export default function SlotCard({
 
     const { formatSlotDateTime } = require('@/lib/date-utils');
 
-    function formatTime(date: Date) {
+    function formatTime(date: Date | string) {
+        const dateObj = new Date(date)
         // Use the centralized formatter that enforces app timezone
-        const { timeStr } = formatSlotDateTime(date, date) // Hack: we only need time here
+        const { timeStr } = formatSlotDateTime(dateObj, dateObj) // Hack: we only need time here
         return timeStr.split(' - ')[0] // Extract just the start time part
     }
 
