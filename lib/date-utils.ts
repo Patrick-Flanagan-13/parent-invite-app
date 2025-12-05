@@ -40,30 +40,28 @@ export function formatSlotDateTime(startTime: Date, endTime: Date, hideEndTime: 
     dateStr: string
     timeStr: string
 } {
-    // Convert to zoned time before formatting
-    const start = toZonedTime(startTime, TIMEZONE);
-    const end = toZonedTime(endTime, TIMEZONE);
-
-    // Check if same day
-    const sameDay = start.toDateString() === end.toDateString()
+    // Check if same day using the target timezone
+    const startStr = startTime.toLocaleDateString('en-US', { timeZone: TIMEZONE });
+    const endStr = endTime.toLocaleDateString('en-US', { timeZone: TIMEZONE });
+    const sameDay = startStr === endStr;
 
     // Format date
-    const dateStr = start.toLocaleDateString('en-US', {
+    const dateStr = startTime.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
-        timeZone: TIMEZONE // Ensure locale string uses correct timezone
+        timeZone: TIMEZONE
     })
 
     // Format time
-    const startTimeStr = start.toLocaleTimeString('en-US', {
+    const startTimeStr = startTime.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZone: TIMEZONE
     })
 
-    const endTimeStr = end.toLocaleTimeString('en-US', {
+    const endTimeStr = endTime.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZone: TIMEZONE
