@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useTransition, useOptimistic } from 'react'
 import { useRouter } from 'next/navigation'
 import { cancelSignup } from '@/app/actions'
 
@@ -16,21 +16,30 @@ type Signup = {
 export default function SignupList({ signups }: { signups: Signup[] }) {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
+    const [optimisticSignups, removeOptimisticSignup] = useOptimistic(
+        signups,
+        (state, idToRemove: string) => state.filter(s => s.id !== idToRemove)
+    )
 
     const handleRemove = (id: string) => {
         if (confirm('Are you sure you want to remove this parent from the slot?')) {
             startTransition(async () => {
+                removeOptimisticSignup(id)
                 try {
                     await cancelSignup(id)
                     router.refresh()
                 } catch (e) {
                     alert('Failed to remove signup')
+                    // In a real app we might want to revert the optimistic update here,
+                    // but useOptimistic handles resets automatically when the server action finishes/fails
+                    // if we re-validate. However, since we filter out, if it fails and we don't refresh,
+                    // it might look gone. But router.refresh() will re-fetch the true state.
                 }
             })
         }
     }
 
-    if (signups.length === 0) {
+    if (optimisticSignups.length === 0) {
         return (
             <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
                 <p className="text-gray-500">No parents have signed up for this slot yet.</p>
@@ -41,7 +50,7 @@ export default function SignupList({ signups }: { signups: Signup[] }) {
     return (
         <div className="overflow-hidden bg-white border border-gray-200 rounded-xl shadow-sm">
             <ul className="divide-y divide-gray-100">
-                {signups.map((signup) => (
+                {optimisticSignups.map((signup) => (
                     <li key={signup.id} className="p-4 hover:bg-gray-50 transition-colors flex items-center justify-between group">
                         <div>
                             <div className="font-bold text-gray-900">{signup.parentName}</div>
