@@ -41,7 +41,14 @@ export async function sendConfirmationEmail(
         // Always use production domain for email links
         const subject = 'Slot Confirmed - Quail Run Elementary'
 
-        console.log('Sending confirmation email to:', signup.email)
+        console.log('Sending confirmation email for slot:', {
+            id: slot.id,
+            name: slot.name,
+            startTime: slot.startTime,
+            endTime: slot.endTime,
+            startTimeISO: slot.startTime.toISOString(),
+            teacherName: slot.teacherName
+        })
 
         const emailHtml = generateConfirmationEmailHtml(signup, slot)
 
@@ -343,6 +350,7 @@ export async function sendReminderEmail(
     parentName: string,
     childName: string,
     slotTime: Date,
+    endTime: Date,
     teacherName: string,
     cancellationToken: string,
     slotName?: string | null,
@@ -363,12 +371,20 @@ export async function sendReminderEmail(
 
         const subject = 'Conference Reminder - Quail Run Elementary'
 
-        console.log('Sending reminder email to:', email)
+        console.log('Sending reminder email:', {
+            email,
+            slotName,
+            slotTime,
+            endTime,
+            slotTimeISO: slotTime.toISOString(),
+            hideEndTime
+        })
 
         const emailHtml = generateReminderEmailHtml(
             parentName,
             childName,
             slotTime,
+            endTime,
             cancellationToken,
             slotName,
             hideEndTime
@@ -389,6 +405,7 @@ export function generateReminderEmailHtml(
     parentName: string,
     childName: string,
     slotTime: Date,
+    endTime: Date,
     cancellationToken: string,
     slotName?: string | null,
     hideEndTime?: boolean
@@ -424,7 +441,7 @@ export function generateReminderEmailHtml(
                             </p>
 
                             <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
-                                ${formatSlotDateTimeForEmail(slotTime, slotTime, hideEndTime).replace('<br>', ' ')}
+                                ${formatSlotDateTimeForEmail(slotTime, endTime, hideEndTime).replace('<br>', ' ')}
                             </p>
                             
                             ${slotName ? `
