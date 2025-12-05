@@ -71,7 +71,7 @@ export async function sendConfirmationEmail(
                             </p>
                             
                             <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
-                                Your parent-teacher conference for <strong>${signup.childName}</strong> has been confirmed! Here are the details:
+                                Your slot for <strong>${signup.childName}</strong> has been confirmed! Here are the details:
                             </p>
                             
                             <!-- Details Box -->
@@ -226,7 +226,7 @@ export async function sendCancellationEmail(
                             </p>
                             
                             <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
-                                Your parent-teacher conference scheduled for <strong>${new Date(slotTime).toLocaleDateString('en-US', {
+                                Your slot is scheduled for <strong>${new Date(slotTime).toLocaleDateString('en-US', {
             weekday: 'long',
             month: 'long',
             day: 'numeric',
@@ -383,7 +383,7 @@ export async function sendReminderEmail(
                             </p>
                             
                             <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">
-                                This is a reminder that you have a parent-teacher conference for <strong>${childName}</strong> with <strong>${teacherName}</strong> coming up tomorrow.
+                                This is a reminder that you have an upcoming slot for <strong>${childName}</strong> coming up tomorrow.
                             </p>
 
                             <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
