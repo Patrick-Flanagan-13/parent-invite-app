@@ -36,7 +36,7 @@ export function getAppTimezone(): string {
 }
 
 // Format date and time for conference slots
-export function formatSlotDateTime(startTime: Date, endTime: Date): {
+export function formatSlotDateTime(startTime: Date, endTime: Date, hideEndTime: boolean = false): {
     dateStr: string
     timeStr: string
 } {
@@ -69,13 +69,13 @@ export function formatSlotDateTime(startTime: Date, endTime: Date): {
         timeZone: TIMEZONE
     })
 
-    const timeStr = `${startTimeStr} - ${endTimeStr}`
+    const timeStr = hideEndTime ? startTimeStr : `${startTimeStr} - ${endTimeStr}`
 
     return { dateStr, timeStr }
 }
 
 // Format for email (returns full formatted string)
-export function formatSlotDateTimeForEmail(startTime: Date, endTime: Date): string {
-    const { dateStr, timeStr } = formatSlotDateTime(startTime, endTime)
+export function formatSlotDateTimeForEmail(startTime: Date, endTime: Date, hideEndTime: boolean = false): string {
+    const { dateStr, timeStr } = formatSlotDateTime(startTime, endTime, hideEndTime)
     return `${dateStr}<br>${timeStr}`
 }

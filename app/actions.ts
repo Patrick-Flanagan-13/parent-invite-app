@@ -204,7 +204,9 @@ export async function signupForSlot(formData: FormData) {
                     id: slot.id,
                     startTime: slot.startTime,
                     endTime: slot.endTime,
-                    teacherName
+                    teacherName,
+                    name: slot.name,
+                    hideEndTime: slot.hideEndTime
                 }
             )
         }

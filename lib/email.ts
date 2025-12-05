@@ -10,6 +10,8 @@ interface SlotDetails {
     startTime: Date
     endTime: Date
     teacherName: string
+    name?: string | null
+    hideEndTime?: boolean
 }
 
 interface SignupDetails {
@@ -83,9 +85,18 @@ export async function sendConfirmationEmail(
                                             📅 DATE & TIME
                                         </p>
                                         <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
-                                            ${formatSlotDateTimeForEmail(slot.startTime, slot.endTime)}
+                                            ${formatSlotDateTimeForEmail(slot.startTime, slot.endTime, slot.hideEndTime)}
                                         </p>
                                         
+                                        ${slot.name ? `
+                                        <p style="margin: 0 0 10px; font-size: 14px; color: #6b7280; font-weight: bold;">
+                                            📝 SLOT NAME
+                                        </p>
+                                        <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
+                                            ${slot.name}
+                                        </p>
+                                        ` : ''}
+
                                     </td>
                                 </tr>
                                 <tr>
@@ -326,7 +337,9 @@ export async function sendReminderEmail(
     childName: string,
     slotTime: Date,
     teacherName: string,
-    cancellationToken: string
+    cancellationToken: string,
+    slotName?: string | null,
+    hideEndTime?: boolean
 ): Promise<void> {
     const apiKey = process.env.RESEND_API_KEY
 
@@ -370,8 +383,14 @@ export async function sendReminderEmail(
                             </p>
 
                             <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937; font-weight: bold;">
-                                ${formatSlotDateTimeForEmail(slotTime, slotTime).replace('<br>', ' ')}
+                                ${formatSlotDateTimeForEmail(slotTime, slotTime, hideEndTime).replace('<br>', ' ')}
                             </p>
+                            
+                            ${slotName ? `
+                            <p style="margin: 0 0 20px; font-size: 16px; color: #1f2937;">
+                                <strong>Slot:</strong> ${slotName}
+                            </p>
+                            ` : ''}
                             
                             <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
                                 If you need to cancel, please use the link below.
