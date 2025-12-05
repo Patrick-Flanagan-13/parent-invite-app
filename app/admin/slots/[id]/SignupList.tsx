@@ -13,6 +13,44 @@ type Signup = {
     attendeeCount: number
 }
 
+import { useState } from 'react'
+
+function RemoveButton({ onConfirm, isPending }: { onConfirm: () => void, isPending: boolean }) {
+    const [needsConfirm, setNeedsConfirm] = useState(false)
+
+    if (needsConfirm) {
+        return (
+            <div className="flex items-center gap-2">
+                <span className="text-xs text-red-600 font-medium">Are you sure?</span>
+                <button
+                    onClick={() => onConfirm()}
+                    disabled={isPending}
+                    className="px-3 py-1.5 text-sm font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                >
+                    {isPending ? 'Removing...' : 'Confirm'}
+                </button>
+                <button
+                    onClick={() => setNeedsConfirm(false)}
+                    disabled={isPending}
+                    className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+                >
+                    Cancel
+                </button>
+            </div>
+        )
+    }
+
+    return (
+        <button
+            onClick={() => setNeedsConfirm(true)}
+            disabled={isPending}
+            className="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
+        >
+            Remove
+        </button>
+    )
+}
+
 export default function SignupList({ signups, onRemove }: { signups: Signup[], onRemove?: (id: string) => void }) {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
@@ -27,17 +65,15 @@ export default function SignupList({ signups, onRemove }: { signups: Signup[], o
             return
         }
 
-        if (confirm('Are you sure you want to remove this parent from the slot?')) {
-            startTransition(async () => {
-                removeOptimisticSignup(id)
-                try {
-                    await cancelSignup(id)
-                    router.refresh()
-                } catch (e) {
-                    alert('Failed to remove signup')
-                }
-            })
-        }
+        startTransition(async () => {
+            removeOptimisticSignup(id)
+            try {
+                await cancelSignup(id)
+                router.refresh()
+            } catch (e) {
+                alert('Failed to remove signup')
+            }
+        })
     }
 
     if (optimisticSignups.length === 0) {
@@ -52,7 +88,7 @@ export default function SignupList({ signups, onRemove }: { signups: Signup[], o
         <div className="overflow-hidden bg-white border border-gray-200 rounded-xl shadow-sm">
             <ul className="divide-y divide-gray-100">
                 {optimisticSignups.map((signup) => (
-                    <li key={signup.id} className="p-4 hover:bg-gray-50 transition-colors flex items-center justify-between group">
+                    <li key={signup.id} className="p-4 hover:bg-gray-50 transition-colors flex items-center justify-between group min-h-[80px]">
                         <div>
                             <div className="font-bold text-gray-900">{signup.parentName}</div>
                             <div className="text-sm text-gray-600">
@@ -68,13 +104,7 @@ export default function SignupList({ signups, onRemove }: { signups: Signup[], o
                                 Registered {new Date(signup.createdAt).toLocaleDateString()}
                             </div>
                         </div>
-                        <button
-                            onClick={() => handleRemove(signup.id)}
-                            disabled={isPending}
-                            className="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
-                        >
-                            {isPending ? 'Removing...' : 'Remove'}
-                        </button>
+                        <RemoveButton onConfirm={() => handleRemove(signup.id)} isPending={isPending} />
                     </li>
                 ))}
             </ul>

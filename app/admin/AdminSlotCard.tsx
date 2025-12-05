@@ -25,17 +25,15 @@ export default function AdminSlotCard({ slot, isAdmin }: { slot: SlotWithDetails
     )
 
     const handleRemove = (id: string) => {
-        if (confirm('Are you sure you want to remove this parent from the slot?')) {
-            startTransition(async () => {
-                removeOptimisticSignup(id)
-                try {
-                    await cancelSignup(id)
-                    router.refresh()
-                } catch (e) {
-                    alert('Failed to remove signup')
-                }
-            })
-        }
+        startTransition(async () => {
+            removeOptimisticSignup(id)
+            try {
+                await cancelSignup(id)
+                router.refresh()
+            } catch (e) {
+                alert('Failed to remove signup')
+            }
+        })
     }
 
     return (
