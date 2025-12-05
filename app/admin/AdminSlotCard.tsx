@@ -40,6 +40,7 @@ export default function AdminSlotCard({ slot, isAdmin }: { slot: SlotWithDetails
         <SlotCard
             slot={slot}
             signupsList={optimisticSignups}
+            shouldFetch={false}
             adminControls={
                 <>
                     <a

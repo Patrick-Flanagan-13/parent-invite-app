@@ -23,15 +23,17 @@ export default function SlotCard({
     slot,
     signupsList,
     adminControls,
-    children
+    children,
+    shouldFetch = true
 }: {
     slot: SlotWithCount,
     signupsList?: any[],
     adminControls?: ReactNode,
-    children?: ReactNode
+    children?: ReactNode,
+    shouldFetch?: boolean
 }) {
     const [fetchedSignups, setFetchedSignups] = useState<any[] | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(shouldFetch)
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -47,8 +49,10 @@ export default function SlotCard({
 
     useEffect(() => {
         // Fetch fresh data on mount to ensure accuracy
-        fetchSlotDetails()
-    }, [slot.id])
+        if (shouldFetch) {
+            fetchSlotDetails()
+        }
+    }, [slot.id, shouldFetch])
 
     // Prioritize fetched data, then prop, then slot object
     const effectiveSignups = fetchedSignups || signupsList || slot.signups
