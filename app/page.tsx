@@ -67,7 +67,7 @@ export default async function Home() {
                         <span className="font-bold text-gray-900 text-xl tracking-tight">Quail Run Elementary</span>
                     </div>
                     <a href="/login" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
-                        Teacher Login
+                        Teacher/Parent Login
                     </a>
                 </div>
             </header>

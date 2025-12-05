@@ -23,7 +23,7 @@ export default function TeacherGrid({ teachers }: { teachers: Teacher[] }) {
     return (
         <div>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Our Teachers</h2>
+                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Our Teachers & Parents</h2>
                 <div className="relative max-w-md w-full md:w-auto">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
