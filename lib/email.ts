@@ -422,7 +422,7 @@ export function generateReminderEmailHtml(
 ): string {
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://quailrun.app'
     const cancellationUrl = `${baseUrl}/cancel/${cancellationToken}`
-    const subject = 'Conference Reminder - Quail Run Elementary'
+    const subject = 'Slot Reminder - Quail Run Elementary'
 
     return `
 <!DOCTYPE html>
@@ -461,11 +461,7 @@ export function generateReminderEmailHtml(
                             ` : ''}
                             
                             <p style="margin: 0 0 30px; font-size: 16px; color: #374151;">
-                                If you need to cancel, please use the link below.
-                            </p>
-
-                            <p style="margin: 0; font-size: 14px; color: #6b7280;">
-                                <a href="${cancellationUrl}" style="color: #2563eb; word-break: break-all;">Cancel Registration</a>
+                                If you need to cancel or reschedule, please contact the teacher directly.
                             </p>
                         </td>
                     </tr>
