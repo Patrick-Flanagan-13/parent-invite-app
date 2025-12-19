@@ -29,6 +29,23 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "SlotTemplate" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "isDefault" BOOLEAN NOT NULL DEFAULT false,
+    "collectContributing" BOOLEAN NOT NULL DEFAULT false,
+    "collectDonating" BOOLEAN NOT NULL DEFAULT false,
+    "collectDonationLink" BOOLEAN NOT NULL DEFAULT false,
+    "displayNameAsTitle" BOOLEAN NOT NULL DEFAULT false,
+    "hideTime" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "SlotTemplate_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
