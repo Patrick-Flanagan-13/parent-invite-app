@@ -120,8 +120,8 @@ export async function verifyAuthenticationAction(response: any) {
     })
 
     if (!authenticator) {
-        console.error('Authenticator not found for credentialID:', response.id)
-        throw new Error('Authenticator not found')
+        console.warn('Authenticator not found for credentialID:', response.id)
+        throw new Error('Authenticator not found. Please try registering again or use your password.')
     }
 
     console.log('Found authenticator:', JSON.stringify(authenticator, null, 2))

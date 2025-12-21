@@ -40,13 +40,17 @@ function RemoveButton({ onConfirm, isPending }: { onConfirm: () => void, isPendi
         )
     }
 
+
     return (
         <button
             onClick={() => setNeedsConfirm(true)}
             disabled={isPending}
-            className="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
+            className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-full hover:bg-red-50"
+            title="Remove User"
         >
-            Remove
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
         </button>
     )
 }
@@ -85,29 +89,35 @@ export default function SignupList({ signups, onRemove }: { signups: Signup[], o
     }
 
     return (
-        <div className="overflow-hidden bg-white border border-gray-200 rounded-xl shadow-sm">
-            <ul className="divide-y divide-gray-100">
-                {optimisticSignups.map((signup) => (
-                    <li key={signup.id} className="p-4 hover:bg-gray-50 transition-colors flex items-center justify-between group min-h-[80px]">
-                        <div>
-                            <div className="font-bold text-gray-900">{signup.parentName}</div>
-                            <div className="text-sm text-gray-600">
-                                {signup.childName && <span className="mr-2">Child: {signup.childName}</span>}
-                                <span className="text-gray-400">•</span>
-                                <span className="ml-2">{signup.email}</span>
-                                <span className="text-gray-400">•</span>
-                                <span className="ml-2 font-medium text-blue-600">
-                                    {signup.attendeeCount} {signup.attendeeCount === 1 ? 'Slot' : 'Slots'}
-                                </span>
-                            </div>
-                            <div className="text-xs text-gray-400 mt-1">
-                                Registered {new Date(signup.createdAt).toLocaleDateString()}
+
+        <div className="space-y-3">
+            {optimisticSignups.map((signup) => (
+                <div key={signup.id} className="group relative flex items-center justify-between p-4 bg-white border border-gray-100 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all">
+                    <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0">
+                            <div className="h-10 w-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                                {signup.parentName.charAt(0).toUpperCase()}
                             </div>
                         </div>
+                        <div>
+                            <div className="text-sm font-medium text-gray-900">{signup.parentName}</div>
+                            <div className="text-sm text-gray-500">
+                                {signup.email}
+                                {signup.childName && <span className="ml-2">• Child: {signup.childName}</span>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="text-sm font-medium text-gray-500">
+                            {signup.attendeeCount} {signup.attendeeCount === 1 ? 'Guest' : 'Guests'}
+                        </div>
+                        <div className="h-4 w-px bg-gray-200"></div>
                         <RemoveButton onConfirm={() => handleRemove(signup.id)} isPending={isPending} />
-                    </li>
-                ))}
-            </ul>
+                    </div>
+                </div>
+            ))}
         </div>
     )
 }
+

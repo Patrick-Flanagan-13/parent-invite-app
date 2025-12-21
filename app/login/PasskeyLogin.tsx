@@ -38,7 +38,11 @@ export default function PasskeyLogin() {
             }
         } catch (err: any) {
             console.error(err)
-            setError(err.message || 'An error occurred during passkey login.')
+            if (err.message && err.message.includes('Authenticator not found')) {
+                setError('Passkey not recognized. Please sign in with password.')
+            } else {
+                setError(err.message || 'An error occurred during passkey login.')
+            }
         } finally {
             setLoading(false)
         }
