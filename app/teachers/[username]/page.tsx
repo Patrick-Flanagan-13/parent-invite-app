@@ -172,7 +172,7 @@ export default async function TeacherPage({ params }: { params: Promise<{ userna
 
                     {slots.length === 0 && (
                         <div className="text-center py-20 bg-white border border-gray-200 border-dashed rounded-xl">
-                            <p className="text-slate-500">No signup slots are currently available for this teacher.</p>
+                            <p className="text-slate-500">No signup slots are currently available for this teacher or parent.</p>
                         </div>
                     )}
                 </div>
