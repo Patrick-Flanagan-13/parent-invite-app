@@ -1,6 +1,6 @@
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import AdminLayoutContent from './AdminLayoutContent'
+import SidebarLayout from './layouts/SidebarLayout'
 
 export default async function AdminLayout({
     children,
@@ -14,8 +14,8 @@ export default async function AdminLayout({
     }
 
     return (
-        <AdminLayoutContent user={session.user}>
+        <SidebarLayout user={session.user}>
             {children}
-        </AdminLayoutContent>
+        </SidebarLayout>
     )
 }
